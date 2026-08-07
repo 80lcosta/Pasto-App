@@ -1,0 +1,12 @@
+{
+  "name": "pasto-app",
+  "private": true,
+  "description": "Dashboard y aplicación de planificación del pastoreo (BioM)",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "test": "npm --workspace @pasto/core run test",
+    "typecheck": "npm --workspace @pasto/core run typecheck"
+  }
+}

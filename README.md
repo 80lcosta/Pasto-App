@@ -6,8 +6,20 @@ trazabilidad para tres perfiles: **medidor**, **técnico** y **cliente**.
 
 ## Estado
 
-**Fase de análisis y plan — pendiente de aprobación.** Todavía no hay código de aplicación.
+**Plan aprobado — Iteración 1 completa:** motor de cálculo agronómico validado contra las
+fuentes (44/44 tests).
 
-- [docs/01-analisis-y-plan.md](docs/01-analisis-y-plan.md) — resumen de los insumos
-  (minuta Juan–Pancho, Excel de Loma Alta, artículos del curso), fórmulas extraídas con su
-  fuente, dudas a confirmar y arquitectura propuesta.
+- [docs/01-analisis-y-plan.md](docs/01-analisis-y-plan.md) — análisis de los insumos,
+  fórmulas con su fuente, dudas y arquitectura aprobada.
+- [docs/02-validacion-motor.md](docs/02-validacion-motor.md) — números del motor lado a
+  lado con la Guía INTA, el Excel de Loma Alta y los artículos.
+- [packages/core](packages/core) — `@pasto/core`, el motor de cálculo (TypeScript, sin
+  dependencias), compartido por la app y el servidor.
+
+## Desarrollo
+
+```bash
+npm install   # Node ≥ 20
+npm test      # suite de validación contra las fuentes
+npm run typecheck
+```
