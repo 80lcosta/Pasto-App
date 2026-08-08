@@ -20,6 +20,8 @@ trazabilidad para tres perfiles: **medidor**, **técnico** y **cliente**.
   técnico: cuña, decisiones y recomendaciones.
 - [docs/05-iteracion-4-portal-y-backend.md](docs/05-iteracion-4-portal-y-backend.md) —
   backend con roles y auditoría, portal del cliente y exportes.
+- **[docs/08-publicar-gratis.md](docs/08-publicar-gratis.md) — cómo mostrar la herramienta
+  a los clientes sin pagar servidor (modo demostración).**
 - [docs/07-kml-mapa-y-ajustes.md](docs/07-kml-mapa-y-ajustes.md) — importación de KML,
   mapa del campo y objetivos editables.
 - **[docs/06-instructivo-de-uso.md](docs/06-instructivo-de-uso.md) — instructivo de uso en
@@ -35,6 +37,13 @@ trazabilidad para tres perfiles: **medidor**, **técnico** y **cliente**.
 | [packages/app](packages/app) | PWA de campo (perfil medidor), offline-first con IndexedDB |
 | [packages/dashboard](packages/dashboard) | Tablero del técnico y portal del cliente (según el rol) |
 | [packages/campo-demo](packages/campo-demo) | Datos del campo piloto Loma Alta |
+
+## Ver una demostración sin instalar nada
+
+Las dos aplicaciones traen un botón **“Entrar a la demostración”**: cargan el campo Loma Alta
+de ejemplo y funcionan enteras dentro del navegador, sin servidor ni base de datos. Alcanza
+con publicar los archivos estáticos (`npm run app:build` y `npm run tablero:build`) en
+cualquier servicio gratuito de páginas. Ver [docs/08-publicar-gratis.md](docs/08-publicar-gratis.md).
 
 ## Puesta en marcha
 

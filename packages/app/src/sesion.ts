@@ -21,6 +21,28 @@ export async function tokenGuardado(): Promise<string> {
   return leerMeta('token', '');
 }
 
+/**
+ * Modo demostración: el campo Loma Alta se carga en el teléfono y la app
+ * funciona entera, sin servidor. Sirve para mostrarla sin pagar hosting; lo
+ * que se mida queda solo en el equipo y no se sincroniza con nadie.
+ */
+export async function enModoDemo(): Promise<boolean> {
+  return (await leerMeta('modoDemo', '')) === 'si';
+}
+
+export async function entrarEnModoDemo(): Promise<void> {
+  const { campo, potreros, recursos, puntos, rodeo } = await import('./campo-demo.js');
+  await db.transaction('rw', [db.recursos, db.potreros, db.puntos, db.rodeos, db.meta], async () => {
+    await db.recursos.bulkPut(recursos);
+    await db.potreros.bulkPut(potreros);
+    await db.puntos.bulkPut(puntos);
+    await db.rodeos.put(rodeo);
+    await db.meta.put({ clave: 'campo', valor: campo });
+    await db.meta.put({ clave: 'modoDemo', valor: 'si' });
+    await db.meta.put({ clave: 'usuario', valor: 'Demostración' });
+  });
+}
+
 export async function usuarioGuardado(): Promise<Usuario | null> {
   const crudo = await leerMeta('usuarioSesion', '');
   return crudo ? (JSON.parse(crudo) as Usuario) : null;
@@ -70,6 +92,11 @@ export async function ingresar(email: string, clave: string): Promise<ResultadoI
 }
 
 export async function salir(): Promise<void> {
+  if (await enModoDemo()) {
+    await escribirMeta('modoDemo', '');
+    await db.delete();
+    return;
+  }
   const [base, token] = await Promise.all([urlServidor(), tokenGuardado()]);
   if (token) {
     await fetch(`${base}/api/salir`, {

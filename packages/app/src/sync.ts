@@ -3,7 +3,7 @@
  * servidor cuando hay señal y marca lo confirmado como enviado.
  */
 import { db, escribirMeta, leerMeta } from './db.js';
-import { tokenGuardado, urlServidor, URL_SERVIDOR_DEFAULT } from './sesion.js';
+import { enModoDemo, tokenGuardado, urlServidor, URL_SERVIDOR_DEFAULT } from './sesion.js';
 import { armarPaqueteSync, hayAlgoParaSincronizar, idsConfirmados, type RespuestaSync } from './sync-nucleo.js';
 
 export { URL_SERVIDOR_DEFAULT };
@@ -35,6 +35,10 @@ export async function sincronizar(): Promise<ResultadoSync> {
   const pendientes = paquete.mediciones.length + paquete.eventos.length;
 
   if (!hayAlgoParaSincronizar(paquete)) return { enviadas: 0, pendientes: 0 };
+  // En demostración no hay servidor a dónde mandar: los datos quedan en el equipo.
+  if (await enModoDemo()) {
+    return { enviadas: 0, pendientes, error: 'Demostración: los datos quedan en este equipo' };
+  }
   if (!token) return { enviadas: 0, pendientes, error: 'Sesión cerrada' };
   if (!navigator.onLine) return { enviadas: 0, pendientes, error: 'Sin señal' };
 

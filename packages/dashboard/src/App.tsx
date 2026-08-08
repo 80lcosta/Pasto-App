@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { agruparRecorridas, analizarRecorrida, serieStock } from './analisis.js';
 import {
   cargarDatos,
+  enModoDemo,
   publicarRecomendacion,
   salir,
   usuarioGuardado,
@@ -60,6 +61,7 @@ export function App() {
 
   if (!usuario) return <Ingreso alIngresar={setUsuario} />;
 
+  const demo = enModoDemo();
   const esCliente = usuario.rol === 'cliente';
 
   const cerrarSesion = async () => {
@@ -108,6 +110,23 @@ export function App() {
           <span className="meta">
             {datos?.campo.campo ?? ''}
             {analisis && ` · recorrida del ${fecha(analisis.fecha)}`} · {usuario.nombre}{' '}
+            {demo && (
+              <>
+                ·{' '}
+                <button
+                  className="boton-enlace"
+                  onClick={() =>
+                    setUsuario({
+                      ...usuario,
+                      rol: esCliente ? 'tecnico' : 'cliente',
+                      nombre: esCliente ? 'Demostración · técnico' : 'Demostración · dueño',
+                    })
+                  }
+                >
+                  ver como {esCliente ? 'técnico' : 'dueño del campo'}
+                </button>{' '}
+              </>
+            )}
             <button className="boton-enlace" onClick={cerrarSesion}>
               salir
             </button>
@@ -127,6 +146,14 @@ export function App() {
       </header>
 
       <div className="tablero">
+        {demo && (
+          <div className="aviso-demo">
+            <strong>Demostración</strong> — campo y mediciones de ejemplo, funcionando dentro de
+            este navegador. Lo que cargues acá no se guarda en ningún lado y se pierde al
+            recargar la página.
+          </div>
+        )}
+
         {error && (
           <div className="aviso-error">
             {error}{' '}

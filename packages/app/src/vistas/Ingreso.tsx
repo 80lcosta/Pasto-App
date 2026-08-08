@@ -4,7 +4,7 @@
  */
 import { useEffect, useState } from 'react';
 import { escribirMeta, leerMeta } from '../db.js';
-import { ingresar, URL_SERVIDOR_DEFAULT } from '../sesion.js';
+import { entrarEnModoDemo, ingresar, URL_SERVIDOR_DEFAULT } from '../sesion.js';
 
 export function Ingreso({ alIngresar }: { alIngresar: () => void }) {
   const [email, setEmail] = useState('');
@@ -71,6 +71,22 @@ export function Ingreso({ alIngresar }: { alIngresar: () => void }) {
         <div style={{ height: 14 }} />
         <button className="boton primario" disabled={entrando || !email || !clave} onClick={entrar}>
           {entrando ? 'Ingresando…' : 'Ingresar'}
+        </button>
+      </div>
+
+      <div className="tarjeta">
+        <h2>Probar sin cuenta</h2>
+        <p className="sub">
+          El campo Loma Alta de ejemplo, para ver cómo se mide. No se sincroniza con nadie.
+        </p>
+        <button
+          className="boton secundario"
+          onClick={async () => {
+            await entrarEnModoDemo();
+            alIngresar();
+          }}
+        >
+          Entrar a la demostración
         </button>
       </div>
     </div>

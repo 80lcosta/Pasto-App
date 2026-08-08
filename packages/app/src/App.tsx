@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from './db.js';
-import { tokenGuardado } from './sesion.js';
+import { enModoDemo, tokenGuardado } from './sesion.js';
 import { iniciarSyncAutomatica } from './sync.js';
 import { Ingreso } from './vistas/Ingreso.js';
 import { Recorrida } from './vistas/Recorrida.js';
@@ -18,7 +18,9 @@ export function App() {
   const [conSesion, setConSesion] = useState<boolean | null>(null);
 
   const revisarSesion = useCallback(() => {
-    void tokenGuardado().then((t) => setConSesion(Boolean(t)));
+    void Promise.all([tokenGuardado(), enModoDemo()]).then(([t, demo]) =>
+      setConSesion(Boolean(t) || demo),
+    );
   }, []);
 
   useEffect(revisarSesion, [revisarSesion]);
@@ -44,6 +46,7 @@ export function App() {
   });
 
   const campo = useLiveQuery(async () => (await db.meta.get('campo'))?.valor ?? '');
+  const demo = useLiveQuery(async () => (await db.meta.get('modoDemo'))?.valor === 'si');
 
   if (conSesion === null) return <div className="cargando">Cargando…</div>;
 
@@ -60,8 +63,10 @@ export function App() {
     );
   }
 
-  const bandaClase = !online ? 'offline' : (pendientes ?? 0) > 0 ? 'pendiente' : 'ok';
-  const bandaTexto = !online
+  const bandaClase = demo ? 'pendiente' : !online ? 'offline' : (pendientes ?? 0) > 0 ? 'pendiente' : 'ok';
+  const bandaTexto = demo
+    ? '🎓 Demostración — los datos quedan solo en este equipo'
+    : !online
     ? `⛰ Sin señal — todo se guarda en el teléfono${(pendientes ?? 0) > 0 ? ` (${pendientes} para enviar)` : ''}`
     : (pendientes ?? 0) > 0
       ? `⏳ ${pendientes} registros esperando sincronizar`

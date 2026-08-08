@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ingresar, URL_SERVIDOR } from '../api.js';
+import { entrarEnModoDemo, ingresar, URL_SERVIDOR } from '../api.js';
 import type { Usuario } from '../tipos.js';
 
 export function Ingreso({ alIngresar }: { alIngresar: (u: Usuario) => void }) {
@@ -53,6 +53,17 @@ export function Ingreso({ alIngresar }: { alIngresar: (u: Usuario) => void }) {
           {entrando ? 'Ingresando…' : 'Ingresar'}
         </button>
         <p className="pie">Servidor: {URL_SERVIDOR}</p>
+      </div>
+
+      <div className="panel">
+        <h2>Ver una demostración</h2>
+        <p className="sub">
+          El campo Loma Alta con datos de ejemplo, funcionando entero dentro del navegador:
+          sin servidor y sin cuenta. Los cálculos son los mismos que con datos reales.
+        </p>
+        <button className="boton secundario" onClick={() => alIngresar(entrarEnModoDemo())}>
+          Entrar a la demostración
+        </button>
       </div>
     </div>
   );
