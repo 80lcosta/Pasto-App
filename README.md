@@ -4,9 +4,36 @@ Dashboard y aplicación de planificación del pastoreo para BioM: medición de p
 (offline), cálculo agronómico (stock, crecimiento, vuelta, balance oferta–demanda) y
 trazabilidad para tres perfiles: **medidor**, **técnico** y **cliente**.
 
+## Para retomar el trabajo
+
+Rama de desarrollo: **`claude/grazing-planning-dashboard-5siibg`**.
+Todo lo hecho está acá; el contenedor de trabajo es descartable.
+
+**Estado:** las cinco iteraciones del plan están completas, más la importación de KML, el
+mapa, los objetivos editables y el modo demostración. **123 tests en verde** (`npm test`).
+
+**Enlaces publicados** (privados hasta compartirlos desde el menú de cada página):
+
+- Tablero: https://claude.ai/code/artifact/c2835b2f-13b7-4aae-943d-554f0d60f795
+- Medidor: https://claude.ai/code/artifact/c7849278-d962-46df-861d-a027a302f39a
+- Instructivo: https://claude.ai/code/artifact/11e065ee-7396-4dc9-9885-e67434d26eb8
+
+**Lo que quedó abierto:**
+
+| Tema | Estado |
+|---|---|
+| Comentarios de los colegas sobre la demostración | Es lo próximo que llega |
+| Dudas agronómicas D1–D14 | Se dejaron con valores por defecto, configurables. Se afinan con el uso ([docs/01](docs/01-analisis-y-plan.md) §1.5, [docs/02](docs/02-validacion-motor.md)) |
+| Dibujar los potreros desde el celular | Pendiente. Hoy entran por KML |
+| Foto satelital de fondo en el mapa | Pendiente; requiere contratar un servicio de mapas |
+| Proyección a 30–60 días | Pendiente: depende de definir la curva de crecimiento esperada (duda D10) |
+| Hosting | Sin decidir. Para mostrar a clientes no hace falta ([docs/08](docs/08-publicar-gratis.md)) |
+| Persistir los cierres de potreros para reservas | Hoy duran lo que dura la sesión del navegador |
+| Pantalla de administración de usuarios y campos | Pendiente; hoy se cargan con `npm run api:sembrar` |
+
 ## Estado
 
-**Plan aprobado — las cinco iteraciones completas, más KML y ajustes** (104 tests en verde).
+**Plan aprobado — las cinco iteraciones completas, más KML y ajustes** (123 tests en verde).
 
 ### Documentación
 
@@ -76,6 +103,6 @@ La conexión a la base se configura con `PASTO_BD`
 ## Verificación
 
 ```bash
-npm test        # 104 tests: motor contra las fuentes, API, tablero y app
+npm test        # 123 tests: motor contra las fuentes, API, tablero y app
 npm run typecheck
 ```
