@@ -1,0 +1,54 @@
+{
+  "campo": "Loma Alta",
+  "targets": {
+    "stockKgMSHa": 1500,
+    "entradaKgMSHa": 2000,
+    "salidaKgMSHa": 1000,
+    "datum": "ras_suelo"
+  },
+  "recursos": [
+    {
+      "id": "pastura-base-alfalfa",
+      "nombre": "Pastura base alfalfa",
+      "curva": { "pendiente": 144, "interseccion": -177, "datum": "ras_suelo", "r2": 0.8623 },
+      "notaCurva": "Curva provisoria (festuca sudeste bonaerense, Guía INTA Anexo 1). Reemplazar por la curva calibrada del recurso; en mezclas con alfalfa usar curva de alfalfa entre octubre y marzo."
+    },
+    {
+      "id": "verdeo-invierno",
+      "nombre": "Verdeo de invierno (avena y vicia)",
+      "curva": { "pendiente": 144, "interseccion": -177, "datum": "ras_suelo", "r2": 0.8623 },
+      "notaCurva": "Curva provisoria (festuca sudeste bonaerense, Guía INTA Anexo 1). Reemplazar por la curva calibrada del recurso."
+    },
+    {
+      "id": "pasto-natural",
+      "nombre": "Pasto natural",
+      "curva": { "pendiente": 144, "interseccion": -177, "datum": "ras_suelo", "r2": 0.8623 },
+      "notaCurva": "Curva provisoria (festuca sudeste bonaerense, Guía INTA Anexo 1). Reemplazar por la curva calibrada del recurso."
+    }
+  ],
+  "potreros": [
+    { "id": "pastura-1", "orden": 1, "nombre": "Pastura 1 año", "superficieHa": 30, "supGanaderaHa": 30, "recursoId": "pastura-base-alfalfa", "descripcionRecurso": "Alfalfa, festuca mediterránea, cebadilla, pasto ovillo y trébol blanco" },
+    { "id": "pastura-2", "orden": 2, "nombre": "Pastura 2 años", "superficieHa": 22, "supGanaderaHa": 22, "recursoId": "pastura-base-alfalfa", "descripcionRecurso": "Alfalfa, festuca mediterránea, cebadilla, pasto ovillo y trébol blanco" },
+    { "id": "pastura-3", "orden": 3, "nombre": "Pastura 3 años", "superficieHa": 30, "supGanaderaHa": 30, "recursoId": "pastura-base-alfalfa", "descripcionRecurso": "Alfalfa, festuca mediterránea, cebadilla, pasto ovillo, achicoria y trébol blanco" },
+    { "id": "pastura-4", "orden": 4, "nombre": "Pastura 4 años", "superficieHa": 24, "supGanaderaHa": 24, "recursoId": "pastura-base-alfalfa", "descripcionRecurso": "Alfalfa, festuca mediterránea, festuca continental, trébol blanco" },
+    { "id": "verdeo", "orden": 5, "nombre": "Verdeo Invierno", "superficieHa": 30, "supGanaderaHa": 15, "recursoId": "verdeo-invierno", "descripcionRecurso": "Avena y vicia villosa" },
+    { "id": "bulevard", "orden": 6, "nombre": "Bulevard", "superficieHa": 25, "supGanaderaHa": 25, "recursoId": "pasto-natural", "descripcionRecurso": "Pasto natural" }
+  ],
+  "rodeo": {
+    "id": "rodeo-general",
+    "nombre": "Rodeo Loma Alta",
+    "categorias": [
+      { "nombre": "Vaca Preñada H", "cabezas": 66, "pesoKg": 475 },
+      { "nombre": "Vaquillona H", "cabezas": 25, "pesoKg": 380 },
+      { "nombre": "Vaquillona AA", "cabezas": 64, "pesoKg": 350 },
+      { "nombre": "Terneras", "cabezas": 60, "pesoKg": 220 },
+      { "nombre": "Vaquillonas", "cabezas": 52, "pesoKg": 265 },
+      { "nombre": "Vaquillonas AA", "cabezas": 79, "pesoKg": 265 },
+      { "nombre": "Toro AA", "cabezas": 3, "pesoKg": 800 },
+      { "nombre": "Toro H", "cabezas": 1, "pesoKg": 800 },
+      { "nombre": "Toro Descarte", "cabezas": 2, "pesoKg": 600 },
+      { "nombre": "Vacas Vacías", "cabezas": 9, "pesoKg": 450 },
+      { "nombre": "Caballos", "cabezas": 12, "pesoKg": 500 }
+    ]
+  }
+}

@@ -1,0 +1,141 @@
+/* Tablero del técnico: pensado para escritorio, legible en tablet. */
+:root {
+  --verde-oscuro: #1b5e20;
+  --verde: #2e7d32;
+  --verde-claro: #e8f5e9;
+  --tinta: #12210f;
+  --fondo: #f5f7f2;
+  --panel: #ffffff;
+  --gris: #6b7280;
+  --borde: #d8e0d4;
+  --ambar: #b45309;
+  --ambar-claro: #fef3c7;
+  --rojo: #b91c1c;
+  --rojo-claro: #fee2e2;
+  --azul: #1d4ed8;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background: var(--fondo);
+  color: var(--tinta);
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.tablero { max-width: 1180px; margin: 0 auto; padding: 0 20px 60px; }
+
+.cabecera {
+  background: var(--verde-oscuro); color: #fff;
+  padding: 16px 20px; margin-bottom: 20px;
+}
+.cabecera .interior { max-width: 1180px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+.cabecera h1 { font-size: 21px; }
+.cabecera .meta { font-size: 14px; opacity: 0.92; }
+
+.aviso-demo {
+  background: var(--ambar-claro); color: var(--ambar);
+  padding: 10px 14px; border-radius: 10px; margin-bottom: 18px;
+  font-size: 14px; font-weight: 600;
+}
+
+.rejilla { display: grid; gap: 16px; }
+.rejilla.dos { grid-template-columns: 1fr 1fr; }
+@media (max-width: 900px) { .rejilla.dos { grid-template-columns: 1fr; } }
+
+.panel {
+  background: var(--panel); border: 1px solid var(--borde);
+  border-radius: 14px; padding: 16px; margin-bottom: 16px;
+}
+.panel h2 { font-size: 16px; color: var(--verde-oscuro); margin-bottom: 3px; }
+.panel .sub { font-size: 13px; color: var(--gris); margin-bottom: 12px; }
+
+/* Indicadores */
+.indicadores { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 16px; }
+.indicador { background: var(--panel); border: 1px solid var(--borde); border-radius: 14px; padding: 14px; }
+.indicador .rotulo { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--gris); }
+.indicador .valor { font-size: 27px; font-weight: 800; color: var(--verde-oscuro); line-height: 1.2; }
+.indicador .detalle { font-size: 13px; color: var(--gris); }
+.indicador.alerta .valor { color: var(--rojo); }
+.indicador.exceso .valor { color: var(--ambar); }
+
+/* Cuña: el área de barras y la línea de targets comparten exactamente la
+   misma caja, para que la línea quede alineada con la altura de las barras. */
+.cuna-area { position: relative; height: 220px; display: flex; align-items: flex-end; gap: 10px; }
+.cuna-area .barra-col { flex: 1; height: 100%; display: flex; align-items: flex-end; }
+.cuna .barra { background: var(--verde); border-radius: 6px 6px 0 0; width: 100%; position: relative; }
+.cuna .barra.encima { background: var(--ambar); }
+.cuna .barra.debajo { background: #93c5a5; }
+.cuna .barra.pastoreo { background: repeating-linear-gradient(45deg, #9ca3af, #9ca3af 6px, #b9bfc7 6px, #b9bfc7 12px); }
+.cuna .valor-barra { position: absolute; top: -19px; width: 100%; text-align: center; font-size: 12px; font-weight: 700; }
+.cuna-nombres { display: flex; gap: 10px; margin-top: 6px; }
+.cuna-nombres .nombre-barra { flex: 1; font-size: 12px; text-align: center; color: var(--gris); }
+/* Alto explícito: un <svg> con viewBox toma su alto de la relación de aspecto
+   si no se lo fija, y la línea quedaría desalineada de las barras. */
+.linea-targets { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+.leyenda { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--gris); margin-top: 10px; }
+.leyenda span { display: flex; align-items: center; gap: 5px; }
+.muestra { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+
+.lectura {
+  border-radius: 10px; padding: 12px 14px; margin-top: 12px; font-weight: 600;
+}
+.lectura.seguir { background: var(--verde-claro); color: var(--verde-oscuro); }
+.lectura.deficit { background: var(--rojo-claro); color: var(--rojo); }
+.lectura.exceso { background: var(--ambar-claro); color: var(--ambar); }
+.lectura ul { margin: 6px 0 0 18px; font-weight: 500; }
+
+/* Tabla de potreros */
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th { text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: 0.03em; color: var(--gris); padding: 8px 10px; border-bottom: 1px solid var(--borde); }
+td { padding: 10px; border-bottom: 1px solid var(--borde); }
+tr:last-child td { border-bottom: none; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+.pastilla { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+.pastilla.en_pastoreo { background: #e5e7eb; color: #374151; }
+.pastilla.listo { background: var(--verde-claro); color: var(--verde-oscuro); }
+.pastilla.pasado { background: var(--ambar-claro); color: var(--ambar); }
+.pastilla.en_descanso { background: #e0e7ff; color: var(--azul); }
+.pastilla.sin_datos { background: #f3f4f6; color: var(--gris); }
+.pastilla.cerrado { background: #ede9fe; color: #6d28d9; }
+
+/* Decisiones */
+.decision { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--borde); }
+.decision:last-child { border-bottom: none; }
+.decision .numero {
+  flex: none; width: 26px; height: 26px; border-radius: 50%;
+  background: var(--verde-oscuro); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700;
+}
+.decision .pregunta { font-size: 13px; color: var(--gris); }
+.decision .respuesta { font-size: 16px; font-weight: 700; color: var(--verde-oscuro); }
+.decision .nota { font-size: 13px; color: var(--gris); }
+
+/* Evolución del stock */
+.grafico-linea { width: 100%; height: 190px; }
+
+/* Recomendaciones */
+textarea.entrada {
+  width: 100%; font-family: inherit; font-size: 15px; padding: 10px;
+  border: 1px solid var(--borde); border-radius: 10px; resize: vertical;
+}
+.boton {
+  padding: 11px 18px; font-size: 15px; font-weight: 700; border-radius: 10px;
+  border: 1px solid var(--verde); background: var(--verde); color: #fff; cursor: pointer;
+}
+.boton:disabled { opacity: 0.5; cursor: default; }
+.boton.secundario { background: #fff; color: var(--verde-oscuro); }
+.fila-form { display: flex; gap: 10px; align-items: center; margin-top: 10px; flex-wrap: wrap; }
+input.entrada { padding: 10px; font-size: 15px; border: 1px solid var(--borde); border-radius: 10px; }
+
+.item-reco { padding: 12px 0; border-bottom: 1px solid var(--borde); }
+.item-reco:last-child { border-bottom: none; }
+.item-reco .meta { font-size: 12px; color: var(--gris); }
+.item-reco .texto { margin-top: 3px; white-space: pre-wrap; }
+
+.pie { font-size: 12px; color: var(--gris); margin-top: 8px; }
+.cargando { padding: 40px; text-align: center; color: var(--gris); }

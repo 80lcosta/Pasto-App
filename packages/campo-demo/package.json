@@ -1,0 +1,13 @@
+{
+  "name": "@pasto/campo-demo",
+  "version": "0.1.0",
+  "description": "Datos del campo piloto Loma Alta compartidos por app, dashboard y servidor",
+  "private": true,
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./loma-alta.json": "./loma-alta.json",
+    "./recorridas-demo.json": "./recorridas-demo.json"
+  }
+}

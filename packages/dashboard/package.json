@@ -1,7 +1,7 @@
 {
-  "name": "@pasto/app",
+  "name": "@pasto/dashboard",
   "version": "0.1.0",
-  "description": "App de campo del Proyecto Pasto — perfil medidor (PWA offline-first)",
+  "description": "Dashboard del técnico — Proyecto Pasto (BioM)",
   "private": true,
   "type": "module",
   "scripts": {
@@ -14,8 +14,6 @@
   "dependencies": {
     "@pasto/campo-demo": "0.1.0",
     "@pasto/core": "0.1.0",
-    "dexie": "^4.0.8",
-    "dexie-react-hooks": "^1.1.7",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

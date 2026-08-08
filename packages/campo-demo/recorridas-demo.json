@@ -1,0 +1,42 @@
+{
+  "nota": "Recorridas de demostración (invierno). La última recorrida reproduce los valores kg MS/ha del caso validado de la Guía INTA §3.1 mapeados a los potreros de Loma Alta. Bulevard entra en pastoreo el 2/8.",
+  "recorridas": [
+    {
+      "fecha": "2026-07-11",
+      "biomasas": { "pastura-1": 1520, "pastura-2": 940, "pastura-3": 1420, "pastura-4": 1330, "verdeo": 990, "bulevard": 1560 },
+      "enPastoreo": []
+    },
+    {
+      "fecha": "2026-07-18",
+      "biomasas": { "pastura-1": 1610, "pastura-2": 985, "pastura-3": 1480, "pastura-4": 1370, "verdeo": 1060, "bulevard": 1620 },
+      "enPastoreo": []
+    },
+    {
+      "fecha": "2026-07-25",
+      "biomasas": { "pastura-1": 1700, "pastura-2": 1025, "pastura-3": 1540, "pastura-4": 1410, "verdeo": 1130, "bulevard": 1685 },
+      "enPastoreo": []
+    },
+    {
+      "fecha": "2026-08-01",
+      "biomasas": { "pastura-1": 1800, "pastura-2": 1070, "pastura-3": 1600, "pastura-4": 1450, "verdeo": 1200, "bulevard": 1750 },
+      "enPastoreo": []
+    },
+    {
+      "fecha": "2026-08-08",
+      "biomasas": { "pastura-1": 1970, "pastura-2": 1150, "pastura-3": 1700, "pastura-4": 1500, "verdeo": 1300, "bulevard": 1050 },
+      "enPastoreo": ["bulevard"]
+    }
+  ],
+  "eventos": [
+    {
+      "id": "demo-entrada-bulevard",
+      "tipo": "entrada",
+      "potreroId": "bulevard",
+      "rodeoId": "rodeo-general",
+      "fechaHora": "2026-08-02T09:30:00.000Z",
+      "alturaCm": 13.4,
+      "usuario": "demo",
+      "estadoSync": "enviado"
+    }
+  ]
+}

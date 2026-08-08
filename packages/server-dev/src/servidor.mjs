@@ -1,26 +1,31 @@
 /**
- * Servidor de sincronización de DESARROLLO para la app del medidor.
- * Persiste en un JSON local y es idempotente por id (los reintentos del
- * teléfono no duplican registros). El backend real (API + Postgres/PostGIS)
- * se construye en la iteración del dashboard; el contrato es el mismo:
+ * Servidor de DESARROLLO del Proyecto Pasto. Persiste en un JSON local y es
+ * idempotente por id. El backend real (API + Postgres/PostGIS, auth, roles)
+ * mantiene este mismo contrato:
  *
- *   POST /api/sync      { usuario, dispositivo, mediciones[], eventos[] } → { aceptadas: [ids] }
- *   GET  /api/estado    → { mediciones, eventos }
- *   GET  /api/mediciones → listado (para inspección durante el desarrollo)
+ *   GET  /api/campo            → configuración del campo (potreros, recursos, rodeo, targets)
+ *   POST /api/sync             { usuario, dispositivo, mediciones[], eventos[] } → { aceptadas: [ids] }
+ *   GET  /api/mediciones       → mediciones recibidas
+ *   GET  /api/eventos          → eventos recibidos
+ *   GET  /api/recomendaciones  → recomendaciones del técnico
+ *   POST /api/recomendaciones  { id, fechaHora, autor, texto, datos? } → { aceptadas: [id] }
+ *   GET  /api/estado           → conteos
  */
 import { createServer } from 'node:http';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { campo } from '@pasto/campo-demo';
 
 const PUERTO = Number(process.env.PUERTO ?? 8787);
 const RUTA_DATOS = join(dirname(fileURLToPath(import.meta.url)), '..', 'data', 'sync.json');
 
 function cargar() {
   try {
-    return JSON.parse(readFileSync(RUTA_DATOS, 'utf8'));
+    const d = JSON.parse(readFileSync(RUTA_DATOS, 'utf8'));
+    return { mediciones: {}, eventos: {}, recomendaciones: {}, ...d };
   } catch {
-    return { mediciones: {}, eventos: {} };
+    return { mediciones: {}, eventos: {}, recomendaciones: {} };
   }
 }
 
@@ -41,56 +46,88 @@ function responder(res, codigo, cuerpo) {
   res.end(JSON.stringify(cuerpo));
 }
 
-const servidor = createServer((req, res) => {
-  const url = new URL(req.url ?? '/', `http://${req.headers.host}`);
-
-  if (req.method === 'OPTIONS') return responder(res, 204, {});
-
-  if (req.method === 'POST' && url.pathname === '/api/sync') {
+function leerCuerpo(req) {
+  return new Promise((resolver, rechazar) => {
     let cuerpo = '';
     req.on('data', (trozo) => (cuerpo += trozo));
     req.on('end', () => {
       try {
-        const paquete = JSON.parse(cuerpo);
-        const aceptadas = [];
-        for (const m of paquete.mediciones ?? []) {
-          if (typeof m?.id === 'string') {
-            datos.mediciones[m.id] = { ...m, recibidaEl: new Date().toISOString() };
-            aceptadas.push(m.id);
-          }
-        }
-        for (const e of paquete.eventos ?? []) {
-          if (typeof e?.id === 'string') {
-            datos.eventos[e.id] = { ...e, recibidoEl: new Date().toISOString() };
-            aceptadas.push(e.id);
-          }
-        }
-        guardar(datos);
-        console.log(
-          `[sync] ${paquete.usuario ?? '?'}: ${aceptadas.length} registros (total ${Object.keys(datos.mediciones).length} mediciones, ${Object.keys(datos.eventos).length} eventos)`,
-        );
-        responder(res, 200, { aceptadas });
+        resolver(JSON.parse(cuerpo));
       } catch {
-        responder(res, 400, { error: 'JSON inválido' });
+        rechazar(new Error('JSON inválido'));
       }
     });
-    return;
-  }
+  });
+}
 
-  if (req.method === 'GET' && url.pathname === '/api/estado') {
-    return responder(res, 200, {
-      mediciones: Object.keys(datos.mediciones).length,
-      eventos: Object.keys(datos.eventos).length,
-    });
-  }
+const servidor = createServer(async (req, res) => {
+  const url = new URL(req.url ?? '/', `http://${req.headers.host}`);
 
-  if (req.method === 'GET' && url.pathname === '/api/mediciones') {
-    return responder(res, 200, Object.values(datos.mediciones));
-  }
+  if (req.method === 'OPTIONS') return responder(res, 204, {});
 
-  responder(res, 404, { error: 'No existe' });
+  try {
+    if (req.method === 'GET' && url.pathname === '/api/campo') {
+      return responder(res, 200, campo);
+    }
+
+    if (req.method === 'POST' && url.pathname === '/api/sync') {
+      const paquete = await leerCuerpo(req);
+      const aceptadas = [];
+      for (const m of paquete.mediciones ?? []) {
+        if (typeof m?.id === 'string') {
+          datos.mediciones[m.id] = { ...m, recibidaEl: new Date().toISOString() };
+          aceptadas.push(m.id);
+        }
+      }
+      for (const e of paquete.eventos ?? []) {
+        if (typeof e?.id === 'string') {
+          datos.eventos[e.id] = { ...e, recibidoEl: new Date().toISOString() };
+          aceptadas.push(e.id);
+        }
+      }
+      guardar(datos);
+      console.log(
+        `[sync] ${paquete.usuario ?? '?'}: ${aceptadas.length} registros (total ${Object.keys(datos.mediciones).length} mediciones, ${Object.keys(datos.eventos).length} eventos)`,
+      );
+      return responder(res, 200, { aceptadas });
+    }
+
+    if (req.method === 'GET' && url.pathname === '/api/mediciones') {
+      return responder(res, 200, Object.values(datos.mediciones));
+    }
+
+    if (req.method === 'GET' && url.pathname === '/api/eventos') {
+      return responder(res, 200, Object.values(datos.eventos));
+    }
+
+    if (req.method === 'GET' && url.pathname === '/api/recomendaciones') {
+      return responder(res, 200, Object.values(datos.recomendaciones));
+    }
+
+    if (req.method === 'POST' && url.pathname === '/api/recomendaciones') {
+      const r = await leerCuerpo(req);
+      if (typeof r?.id !== 'string' || typeof r?.texto !== 'string') {
+        return responder(res, 400, { error: 'Falta id o texto' });
+      }
+      datos.recomendaciones[r.id] = { ...r, recibidaEl: new Date().toISOString() };
+      guardar(datos);
+      return responder(res, 200, { aceptadas: [r.id] });
+    }
+
+    if (req.method === 'GET' && url.pathname === '/api/estado') {
+      return responder(res, 200, {
+        mediciones: Object.keys(datos.mediciones).length,
+        eventos: Object.keys(datos.eventos).length,
+        recomendaciones: Object.keys(datos.recomendaciones).length,
+      });
+    }
+
+    responder(res, 404, { error: 'No existe' });
+  } catch (e) {
+    responder(res, 400, { error: e instanceof Error ? e.message : 'Error' });
+  }
 });
 
 servidor.listen(PUERTO, () => {
-  console.log(`Servidor de sincronización (desarrollo) en http://localhost:${PUERTO}`);
+  console.log(`Servidor de desarrollo del Proyecto Pasto en http://localhost:${PUERTO}`);
 });
