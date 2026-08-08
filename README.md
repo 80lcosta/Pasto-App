@@ -6,8 +6,7 @@ trazabilidad para tres perfiles: **medidor**, **técnico** y **cliente**.
 
 ## Estado
 
-**Plan aprobado — Iteraciones 1 a 4 completas** (91 tests en verde).
-Falta la Iteración 5: el instructivo de uso por perfil.
+**Plan aprobado — las cinco iteraciones completas** (91 tests en verde).
 
 ### Documentación
 
@@ -21,6 +20,9 @@ Falta la Iteración 5: el instructivo de uso por perfil.
   técnico: cuña, decisiones y recomendaciones.
 - [docs/05-iteracion-4-portal-y-backend.md](docs/05-iteracion-4-portal-y-backend.md) —
   backend con roles y auditoría, portal del cliente y exportes.
+- **[docs/06-instructivo-de-uso.md](docs/06-instructivo-de-uso.md) — instructivo de uso en
+  lenguaje llano, un capítulo por perfil.** Versión web para compartir:
+  [docs/instructivo.html](docs/instructivo.html).
 
 ### Paquetes
 

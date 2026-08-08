@@ -1,0 +1,717 @@
+<title>Pasto · Cómo se usa</title>
+
+<style>
+  /* ---------------------------------------------------------------
+     Paleta tomada del propio sistema: el verde de pastura y el ocre
+     del diferido que el usuario ve en pantalla. Neutros con sesgo
+     verde para que el papel no lea como gris de plantilla.
+     --------------------------------------------------------------- */
+  :root {
+    --papel:        #f6f7f2;
+    --papel-hondo:  #eceee5;
+    --tarjeta:      #ffffff;
+    --tinta:        #151a15;
+    --tinta-suave:  #5d6659;
+    --linea:        #d9ddd0;
+    --verde-hondo:  #1d4d24;
+    --verde:        #3a7a44;
+    --verde-tenue:  #e6efe4;
+    --ocre:         #8a5716;
+    --ocre-tenue:   #f7eedd;
+    --ladrillo:     #9c382a;
+    --ladrillo-tenue:#f8e6e2;
+    --sombra:       0 1px 2px rgba(21, 26, 21, .05), 0 8px 24px rgba(21, 26, 21, .05);
+
+    --serif: Georgia, 'Iowan Old Style', 'Times New Roman', serif;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --papel:        #11150f;
+      --papel-hondo:  #191e16;
+      --tarjeta:      #1a201a;
+      --tinta:        #e7ebe1;
+      --tinta-suave:  #a3ad9d;
+      --linea:        #2f3a2d;
+      --verde-hondo:  #8fc199;
+      --verde:        #6fae7c;
+      --verde-tenue:  #1d2a1e;
+      --ocre:         #d7a45c;
+      --ocre-tenue:   #2a2013;
+      --ladrillo:     #e08878;
+      --ladrillo-tenue:#2c1a17;
+      --sombra:       0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --papel:        #11150f;
+    --papel-hondo:  #191e16;
+    --tarjeta:      #1a201a;
+    --tinta:        #e7ebe1;
+    --tinta-suave:  #a3ad9d;
+    --linea:        #2f3a2d;
+    --verde-hondo:  #8fc199;
+    --verde:        #6fae7c;
+    --verde-tenue:  #1d2a1e;
+    --ocre:         #d7a45c;
+    --ocre-tenue:   #2a2013;
+    --ladrillo:     #e08878;
+    --ladrillo-tenue:#2c1a17;
+    --sombra:       0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--papel);
+    color: var(--tinta);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .envoltorio { max-width: 1040px; margin: 0 auto; padding: 0 24px 96px; }
+
+  /* --- Portada ------------------------------------------------- */
+  .portada {
+    padding: 72px 0 40px;
+    border-bottom: 3px solid var(--verde-hondo);
+    margin-bottom: 40px;
+  }
+  .marca {
+    font-family: var(--sans);
+    font-size: 12px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--verde);
+    font-weight: 700;
+    margin: 0 0 14px;
+  }
+  .portada h1 {
+    font-family: var(--serif);
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    line-height: 1.05;
+    margin: 0 0 16px;
+    letter-spacing: -.02em;
+    text-wrap: balance;
+    color: var(--verde-hondo);
+  }
+  .bajada {
+    font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+    color: var(--tinta-suave);
+    max-width: 60ch;
+    margin: 0;
+  }
+
+  /* --- Selector de perfil: el eje del documento ----------------- */
+  .perfiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin: 40px 0 56px;
+  }
+  .perfil {
+    display: block;
+    background: var(--tarjeta);
+    border: 1px solid var(--linea);
+    border-top: 4px solid var(--verde);
+    border-radius: 4px;
+    padding: 20px;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: var(--sombra);
+    transition: transform .15s ease, border-color .15s ease;
+  }
+  .perfil:hover, .perfil:focus-visible { transform: translateY(-2px); border-top-color: var(--verde-hondo); }
+  .perfil .quien {
+    font-family: var(--serif);
+    font-size: 1.35rem;
+    color: var(--verde-hondo);
+    display: block;
+    margin-bottom: 4px;
+  }
+  .perfil .hace { color: var(--tinta-suave); font-size: .95rem; display: block; }
+  .perfil .con {
+    display: inline-block;
+    margin-top: 12px;
+    font-size: 12px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--verde);
+  }
+
+  /* --- Texto ---------------------------------------------------- */
+  h2 {
+    font-family: var(--serif);
+    font-size: clamp(1.7rem, 3.6vw, 2.3rem);
+    line-height: 1.15;
+    margin: 64px 0 8px;
+    color: var(--verde-hondo);
+    text-wrap: balance;
+    letter-spacing: -.01em;
+  }
+  h3 {
+    font-family: var(--sans);
+    font-size: 1.12rem;
+    font-weight: 700;
+    margin: 36px 0 6px;
+    color: var(--tinta);
+  }
+  p, li { max-width: 68ch; }
+  p { margin: 0 0 18px; }
+  ul, ol { margin: 0 0 18px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { font-weight: 700; }
+  a { color: var(--verde); }
+
+  .capitulo {
+    scroll-margin-top: 20px;
+    padding-top: 8px;
+    border-top: 1px solid var(--linea);
+    margin-top: 72px;
+  }
+  .banda-rol {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 10px;
+    background: var(--verde-tenue);
+    color: var(--verde-hondo);
+    padding: 7px 14px;
+    border-radius: 3px;
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-top: 40px;
+  }
+
+  /* --- Avisos --------------------------------------------------- */
+  .aviso {
+    background: var(--tarjeta);
+    border: 1px solid var(--linea);
+    border-left: 4px solid var(--verde);
+    border-radius: 3px;
+    padding: 18px 20px;
+    margin: 26px 0;
+    box-shadow: var(--sombra);
+  }
+  .aviso p:last-child { margin-bottom: 0; }
+  .aviso .rotulo {
+    display: block;
+    font-size: 12px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--verde);
+    margin-bottom: 6px;
+  }
+  .aviso.ojo { border-left-color: var(--ocre); background: var(--ocre-tenue); }
+  .aviso.ojo .rotulo { color: var(--ocre); }
+  .aviso.limite { border-left-color: var(--ladrillo); background: var(--ladrillo-tenue); }
+  .aviso.limite .rotulo { color: var(--ladrillo); }
+
+  /* --- Pasos (secuencia real de trabajo) ------------------------ */
+  ol.pasos { list-style: none; padding: 0; counter-reset: paso; margin: 24px 0; }
+  ol.pasos > li {
+    counter-increment: paso;
+    position: relative;
+    padding-left: 52px;
+    margin-bottom: 20px;
+    max-width: 64ch;
+  }
+  ol.pasos > li::before {
+    content: counter(paso);
+    position: absolute;
+    left: 0; top: -1px;
+    width: 34px; height: 34px;
+    background: var(--verde-hondo);
+    color: var(--papel);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: .95rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* --- Tablas --------------------------------------------------- */
+  .tabla-marco { overflow-x: auto; margin: 24px 0; }
+  table { border-collapse: collapse; width: 100%; font-size: .96rem; min-width: 460px; }
+  caption { text-align: left; color: var(--tinta-suave); font-size: .9rem; padding-bottom: 8px; }
+  th {
+    text-align: left;
+    font-size: 12px;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--tinta-suave);
+    border-bottom: 2px solid var(--linea);
+    padding: 10px 14px 10px 0;
+    font-weight: 700;
+  }
+  td {
+    padding: 12px 14px 12px 0;
+    border-bottom: 1px solid var(--linea);
+    vertical-align: top;
+    font-variant-numeric: tabular-nums;
+  }
+  td:first-child { font-weight: 600; }
+  tbody tr:last-child td { border-bottom: none; }
+
+  /* --- Glosario ------------------------------------------------- */
+  dl.glosario { margin: 24px 0; display: grid; gap: 0; }
+  dl.glosario > div {
+    display: grid;
+    grid-template-columns: minmax(180px, 240px) 1fr;
+    gap: 24px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--linea);
+  }
+  dl.glosario dt { font-weight: 700; color: var(--verde-hondo); }
+  dl.glosario dd { margin: 0; color: var(--tinta); max-width: 60ch; }
+  @media (max-width: 640px) {
+    dl.glosario > div { grid-template-columns: 1fr; gap: 4px; }
+  }
+
+  /* --- Preguntas ------------------------------------------------ */
+  .pregunta { border-bottom: 1px solid var(--linea); padding: 16px 0; }
+  .pregunta summary {
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1.02rem;
+    list-style: none;
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+  }
+  .pregunta summary::-webkit-details-marker { display: none; }
+  .pregunta summary::before {
+    content: '+';
+    color: var(--verde);
+    font-size: 1.3rem;
+    line-height: 1;
+    flex: none;
+  }
+  .pregunta[open] summary::before { content: '−'; }
+  .pregunta p { margin: 12px 0 0 24px; color: var(--tinta-suave); }
+
+  .cierre {
+    margin-top: 72px;
+    padding-top: 20px;
+    border-top: 1px solid var(--linea);
+    color: var(--tinta-suave);
+    font-size: .9rem;
+  }
+
+  a:focus-visible, summary:focus-visible {
+    outline: 2px solid var(--verde);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+
+  @media print {
+    body { background: #fff; color: #000; font-size: 11pt; }
+    .perfiles, .portada { break-after: avoid; }
+    .capitulo { break-before: page; }
+    .aviso, table, ol.pasos > li { break-inside: avoid; }
+    .pregunta[open] p, .pregunta p { display: block !important; }
+  }
+</style>
+
+<div class="envoltorio">
+
+  <header class="portada">
+    <p class="marca">BioM · Manejo del pastoreo</p>
+    <h1>Pasto: cómo se usa</h1>
+    <p class="bajada">
+      Guía práctica para las tres personas que trabajan con la herramienta. Está escrita en
+      criollo, sin vueltas. Si algo no se entiende, está mal escrito: avisá.
+    </p>
+  </header>
+
+  <h2 style="margin-top:0">Qué es esto, en dos renglones</h2>
+  <p>
+    Una herramienta para <strong>saber cuánto pasto hay, cuánto crece y cuánto se come</strong>,
+    y decidir a tiempo qué hacer: a qué potrero entrar, cuánta superficie dar por día, si hay
+    que suplementar, descargar o cerrar lotes para reservas.
+  </p>
+  <p>
+    Nada de esto es nuevo: es lo que hace un buen asesor con la libreta. Lo que cambia es que
+    queda <strong>medido, guardado y a la vista de todos</strong>, en vez de en la cabeza de uno.
+  </p>
+
+  <h3>Por qué sirve</h3>
+  <p>
+    Hoy pasa esto: se planifica una cosa y a los dos meses uno vuelve y se hizo otra. O se llega
+    al 20 de julio sin pasto y ya es tarde para reaccionar. O sobra pasto en primavera y se
+    pierde porque no se cerró superficie a tiempo.
+  </p>
+  <p>
+    La herramienta no decide por nadie. Lo que hace es <strong>avisar antes</strong>, con números,
+    para que la decisión se tome cuando todavía sirve.
+  </p>
+
+  <h2>¿Cuál sos vos?</h2>
+  <p>Cada uno entra con su usuario y ve solo lo suyo. Elegí tu parte:</p>
+
+  <nav class="perfiles">
+    <a class="perfil" href="#medidor">
+      <span class="quien">El que mide</span>
+      <span class="hace">Sale al campo cada 15 días y carga las alturas del pasto.</span>
+      <span class="con">Celular · sin señal</span>
+    </a>
+    <a class="perfil" href="#tecnico">
+      <span class="quien">El técnico</span>
+      <span class="hace">Mira los números y dice qué hacer esta semana.</span>
+      <span class="con">Computadora</span>
+    </a>
+    <a class="perfil" href="#dueno">
+      <span class="quien">El dueño del campo</span>
+      <span class="hace">Sigue todo lo que se midió, se decidió y se hizo.</span>
+      <span class="con">Computadora o celular</span>
+    </a>
+  </nav>
+
+  <div class="aviso">
+    <span class="rotulo">Lo importante de los permisos</span>
+    <p>
+      El que mide no puede borrar el historial. El dueño no puede cambiar los datos. Todo queda
+      firmado con nombre y fecha. No es una limitación: es lo que garantiza que lo que se ve es
+      lo que realmente pasó.
+    </p>
+  </div>
+
+  <!-- ============ CAPÍTULO 1 ============ -->
+  <section class="capitulo" id="medidor">
+    <span class="banda-rol">Capítulo 1 · El que mide</span>
+    <h2>Salir a medir</h2>
+
+    <h3>Qué necesitás</h3>
+    <ul>
+      <li>El celular, con la aplicación instalada.</li>
+      <li>El plato o la regla para medir la altura del pasto.</li>
+      <li>Nada más. <strong>No hace falta señal.</strong></li>
+    </ul>
+
+    <h3>La primera vez</h3>
+    <p>
+      Entrás con tu usuario y tu clave. <strong>Esta vez sí necesitás señal</strong>, porque el
+      celular se baja el campo entero: los potreros, los puntos y las cuentas. Después de eso,
+      podés salir a medir todo el día sin una raya de señal.
+    </p>
+
+    <h3>Cómo es una recorrida</h3>
+    <p>
+      En la pantalla aparecen los potreros y, adentro de cada uno, los <strong>puntos de
+      medición</strong>. Los puntos son siempre los mismos y siempre en el mismo orden. Arriba
+      de todo ves cuántos llevás medidos y cuántos te faltan.
+    </p>
+
+    <div class="aviso">
+      <span class="rotulo">Por qué siempre los mismos puntos</span>
+      <p>
+        Porque el crecimiento se calcula comparando <strong>el mismo punto contra la vez
+        anterior</strong>. Si hoy medís acá y la próxima allá, el número no dice nada.
+      </p>
+    </div>
+
+    <h3>Cómo se mide un punto</h3>
+    <ol class="pasos">
+      <li>Tocá el punto en la lista.</li>
+      <li>Marcá la altura con el teclado grande y tocá <strong>“+ Agregar lectura”</strong>.</li>
+      <li>Repetí unas cuantas veces caminando el punto, cada 10 pasos más o menos.</li>
+      <li>Cuando terminaste, tocá <strong>“Guardar punto”</strong>.</li>
+    </ol>
+    <p>
+      Apenas guardás, la aplicación te muestra los <strong>kilos de pasto por hectárea</strong>.
+      Ese número sale solo, de la altura que cargaste.
+    </p>
+
+    <div class="aviso ojo">
+      <span class="rotulo">Ojo con esto</span>
+      <p>
+        Si el plato cae sobre un manchón de maleza o sobre tierra pelada, <strong>no lo
+        saltees</strong>: tocá el botón <strong>“0 · maleza / suelo desnudo”</strong>. Esa lectura
+        cuenta como cero y entra en el promedio.
+      </p>
+      <p>
+        Si solo medís donde hay pasto lindo, el número va a decir que hay más pasto del que hay,
+        y la cuenta sale mal para todos.
+      </p>
+    </div>
+
+    <h3>Entrada y salida de animales</h3>
+    <p>
+      En la solapa <strong>Animales</strong> cargás cuándo entran y cuándo salen de un potrero.
+      Poné también la altura del pasto si podés, aunque sea a ojo: es opcional pero sirve mucho.
+      Es lo que después le permite al sistema saber qué potrero está en descanso y hace cuántos
+      días.
+    </p>
+
+    <h3>Cuando no hay señal</h3>
+    <p>
+      <strong>No pasa nada.</strong> Arriba aparece una franja gris que dice <em>“Sin señal —
+      todo se guarda en el teléfono”</em>. Seguís midiendo igual. Cuando el celular vuelve a
+      tener señal —en el casco, en el pueblo, donde sea— <strong>manda todo solo</strong>. No
+      tenés que acordarte de hacer nada. Si querés forzarlo, en la solapa <strong>Estado</strong>
+      hay un botón para mandar ahora.
+    </p>
+
+    <h3>Preguntas que aparecen siempre</h3>
+    <details class="pregunta">
+      <summary>¿Y si me equivoco en una altura?</summary>
+      <p>
+        Si todavía no guardaste el punto, la flecha ← borra el último número. Si ya lo guardaste,
+        avisale al técnico: los datos no se borran a propósito, para que nadie pueda tocar el
+        historial, pero él puede dejar la aclaración.
+      </p>
+    </details>
+    <details class="pregunta">
+      <summary>¿Cuántas lecturas hago por punto?</summary>
+      <p>Cuantas más, mejor el promedio. Con unas 8 o 10 por punto ya estás bien.</p>
+    </details>
+    <details class="pregunta">
+      <summary>¿Y si se me apaga el celular?</summary>
+      <p>Lo que guardaste está guardado. Prendés y sigue todo ahí.</p>
+    </details>
+    <details class="pregunta">
+      <summary>¿Cada cuánto hay que salir a medir?</summary>
+      <p>
+        Cada 15 días está bien. En primavera, si se puede, cada 7. Es mejor medir cada 15 días
+        siempre, que cada 7 y abandonar al mes.
+      </p>
+    </details>
+  </section>
+
+  <!-- ============ CAPÍTULO 2 ============ -->
+  <section class="capitulo" id="tecnico">
+    <span class="banda-rol">Capítulo 2 · El técnico</span>
+    <h2>Leer el tablero y decidir</h2>
+
+    <h3>Lo primero que mirás: cinco números</h3>
+    <div class="tabla-marco">
+      <table>
+        <caption>Arriba del tablero, para la última recorrida.</caption>
+        <thead>
+          <tr><th scope="col">Número</th><th scope="col">Qué te dice</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Stock de pasto</td><td>Cuánto pasto hay en promedio en todo el campo, y cuánto te desviaste del objetivo.</td></tr>
+          <tr><td>Crecimiento</td><td>Cuántos kilos por hectárea produce el campo por día.</td></tr>
+          <tr><td>Pasto por día</td><td>Cuántos kilos totales podés comer por día sin bajar el stock.</td></tr>
+          <tr><td>Demanda</td><td>Cuántos kilos por día come la hacienda que tenés.</td></tr>
+          <tr><td>Balance</td><td>La resta de los dos anteriores: si sobra o si falta.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Si el balance está en rojo, falta pasto. Si está en ámbar, sobra.</p>
+
+    <h3>El gráfico de cuña</h3>
+    <p>
+      Cada barra es un potrero, ordenados de más a menos pasto. La <strong>línea roja</strong> va
+      del objetivo de entrada (izquierda) al de salida (derecha). Se lee así:
+    </p>
+    <ul>
+      <li><strong>Las barras siguen la línea</strong> → vas bien, seguí como venías.</li>
+      <li><strong>La mayoría por debajo</strong> → falta pasto: aflojá la rotación, bajá carga o suplementá.</li>
+      <li><strong>La mayoría por encima</strong> → sobra pasto: acelerá la rotación, subí carga, sacá el suplemento y cerrá potreros para reservas.</li>
+    </ul>
+    <p>El sistema ya te dice cuál de los tres casos es, abajo del gráfico.</p>
+
+    <h3>Las decisiones de la semana</h3>
+    <ol class="pasos">
+      <li>
+        <strong>A qué potrero entran.</strong> El que está más cerca del objetivo de entrada. Si
+        hay alguno pasado de largo, te avisa que conviene dejarlo para reservas.
+      </li>
+      <li>
+        <strong>Cuánta superficie por día.</strong> Las hectáreas para comer lo que crece dejando
+        el remanente objetivo. También te dice qué vuelta te queda a ese ritmo y cuántos días
+        como máximo conviene dejar los animales en cada parcela.
+      </li>
+      <li>
+        <strong>Si alcanza el pasto.</strong> Y si no alcanza, cuántos kilos suplementar por
+        animal por día, o cuánta hacienda sacar.
+      </li>
+      <li>
+        <strong>Cuánto cerrar para reservas.</strong> Cuando sobra pasto: el porcentaje y las
+        hectáreas.
+      </li>
+    </ol>
+
+    <h3>Probar antes de decidir</h3>
+    <p>
+      En la tabla de potreros, el botón <strong>Cerrar</strong> saca al lote de la rotación y
+      <strong>todos los números se recalculan solos</strong>: la superficie de la plataforma, el
+      pasto disponible por día y el stock promedio. Sirve para preguntarse
+      <em>“¿qué me pasa si cierro estas 30 hectáreas?”</em> sin comprometerse.
+    </p>
+
+    <h3>Dejar la recomendación escrita</h3>
+    <p>
+      Abajo de todo escribís qué hacer esta semana. El botón <strong>“Usar las decisiones
+      calculadas”</strong> arma el texto solo y vos lo corregís con tu criterio. Cuando la
+      registrás, queda guardada <strong>con la fecha, tu nombre y los números de esa
+      recorrida</strong>. Eso es lo que después permite mirar para atrás y entender por qué se
+      decidió lo que se decidió.
+    </p>
+  </section>
+
+  <!-- ============ CAPÍTULO 3 ============ -->
+  <section class="capitulo" id="dueno">
+    <span class="banda-rol">Capítulo 3 · El dueño del campo</span>
+    <h2>Seguir el proceso</h2>
+
+    <h3>Qué podés ver</h3>
+    <div class="tabla-marco">
+      <table>
+        <thead>
+          <tr><th scope="col">Solapa</th><th scope="col">Qué encontrás</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Estado del campo</td><td>Cómo está el campo hoy, con los mismos números y el mismo gráfico que ve el técnico.</td></tr>
+          <tr><td>Historial</td><td>Cada medición de cada potrero, con la fecha y quién la cargó.</td></tr>
+          <tr><td>Informes</td><td>Todas las recomendaciones del técnico, con los números en los que se basó.</td></tr>
+          <tr><td>Auditoría</td><td>El registro de todo lo que pasó en el sistema.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Cómo mirar el estado del campo sin ser técnico</h3>
+    <p>Mirá dos cosas:</p>
+    <ol class="pasos">
+      <li>
+        <strong>El stock contra el objetivo.</strong> Si dice “objetivo 1.500” y estás en 1.445,
+        estás bien. Muy por debajo: viene faltando pasto hace rato. Muy por arriba: se está
+        perdiendo pasto que se podría haber cosechado.
+      </li>
+      <li>
+        <strong>El balance.</strong> En rojo y con un número grande significa que la hacienda
+        come más de lo que el campo produce. Eso se arregla de una sola forma: dando comida de
+        afuera o sacando animales. La herramienta te dice cuánto de cada cosa.
+      </li>
+    </ol>
+
+    <h3>La auditoría, en criollo</h3>
+    <p>
+      Es la lista de todo lo que pasó: quién entró al sistema, quién midió, cuándo se
+      sincronizaron los datos, qué recomendó el técnico y cuándo. Sirve para
+      <strong>controlar que lo planificado sea lo que efectivamente se hizo</strong>. Si el plan
+      decía una cosa y en el campo se hizo otra, acá se ve.
+    </p>
+
+    <h3>Llevarte los datos</h3>
+    <p>En la solapa <strong>Informes</strong>:</p>
+    <ul>
+      <li>
+        <strong>Descargar planilla de Excel</strong> — un archivo con todo: el stock de cada
+        recorrida, todas las mediciones, los movimientos de hacienda, las recomendaciones y la
+        auditoría. Se abre en Excel y es tuyo, para hacer lo que quieras.
+      </li>
+      <li>
+        <strong>Imprimir o guardar en PDF</strong> — el informe como lo ves en pantalla, para
+        mandar por mail o imprimir.
+      </li>
+    </ul>
+  </section>
+
+  <!-- ============ GLOSARIO ============ -->
+  <section class="capitulo" id="glosario">
+    <span class="banda-rol">Para todos</span>
+    <h2>Glosario</h2>
+    <dl class="glosario">
+      <div><dt>kg MS/ha</dt><dd>Kilos de materia seca por hectárea. Es el pasto descontándole el agua: la forma de comparar peras con peras entre un lote seco y uno mojado.</dd></div>
+      <div><dt>Stock de pasto</dt><dd>El promedio de pasto de todo el campo. Es el número que se trata de mantener parejo todo el año.</dd></div>
+      <div><dt>Tasa de crecimiento</dt><dd>Cuántos kilos de pasto produce una hectárea por día.</dd></div>
+      <div><dt>Biomasa de entrada</dt><dd>Con cuánto pasto conviene que entren los animales al potrero.</dd></div>
+      <div><dt>Remanente o biomasa de salida</dt><dd>Cuánto pasto hay que dejar cuando salen. Dejar de menos castiga el rebrote.</dd></div>
+      <div><dt>Vuelta</dt><dd>Cuántos días pasan hasta volver a pastorear el mismo lote. En este sistema no se elige: <strong>es el resultado</strong> de cuánta superficie das por día.</dd></div>
+      <div><dt>Plataforma de pastoreo</dt><dd>El conjunto de potreros que están en la rotación.</dd></div>
+      <div><dt>Gráfico de cuña</dt><dd>El de barras. Muestra si el campo está parejo o desacomodado.</dd></div>
+      <div><dt>Desde el ras del suelo</dt><dd>Desde dónde se mide el pasto. Todos los números de esta herramienta se miden igual, desde abajo; mezclar formas de medir es el error más común.</dd></div>
+    </dl>
+  </section>
+
+  <!-- ============ PREGUNTAS ============ -->
+  <section class="capitulo" id="preguntas">
+    <span class="banda-rol">Para todos</span>
+    <h2>Preguntas frecuentes</h2>
+
+    <details class="pregunta">
+      <summary>¿Sirve para campo natural o solo para pasturas?</summary>
+      <p>
+        Para los dos. La forma de medir y las cuentas son las mismas. Lo que cambia es la curva
+        de cada recurso, que se calibra una vez.
+      </p>
+    </details>
+    <details class="pregunta">
+      <summary>¿Necesito satélite?</summary>
+      <p>
+        No. La herramienta funciona con lo que se mide a campo. El satélite puede sumarse después
+        como complemento, pero en invierno hay meses sin imágenes útiles y no se puede depender
+        de eso.
+      </p>
+    </details>
+    <details class="pregunta">
+      <summary>¿Qué pasa el primer día, cuando no hay historial?</summary>
+      <p>
+        Con una sola recorrida ya ves cuánto pasto tiene cada potrero. El crecimiento recién se
+        puede calcular con la segunda recorrida, 7 a 15 días después. La herramienta te lo avisa.
+      </p>
+    </details>
+    <details class="pregunta">
+      <summary>¿Los números son inventados?</summary>
+      <p>
+        No. Las cuentas salen del material del curso de manejo del pastoreo —principalmente la
+        guía de INTA Balcarce de Berone y equipo— y están verificadas contra los ejemplos
+        publicados: la herramienta reproduce los mismos resultados.
+      </p>
+    </details>
+    <details class="pregunta">
+      <summary>¿Y si el que mide se equivoca?</summary>
+      <p>
+        Los errores de medición existen siempre. Por eso se mide en varios puntos y se promedia,
+        y por eso conviene revisar los remanentes: si el pasto que queda no coincide con lo que
+        decía la cuenta, hay que ajustar.
+      </p>
+    </details>
+    <details class="pregunta">
+      <summary>¿Esto reemplaza al asesor?</summary>
+      <p>
+        No. Le da los números para decidir mejor y más temprano. Hay decisiones que son de
+        criterio y no de cuenta —por ejemplo, entrar a una alfalfa por el estado de la planta
+        aunque falte stock— y esas las sigue tomando el técnico.
+      </p>
+    </details>
+  </section>
+
+  <!-- ============ LÍMITES ============ -->
+  <section class="capitulo" id="limites">
+    <span class="banda-rol">Con las cartas sobre la mesa</span>
+    <h2>Lo que todavía no hace</h2>
+    <p>Conviene saberlo de antemano:</p>
+
+    <div class="aviso limite">
+      <span class="rotulo">Pendiente</span>
+      <ul style="margin-bottom:0">
+        <li><strong>No tiene el mapa del campo dibujado.</strong> Los potreros se ven en una tabla, no en un plano. Para dibujarlos hacen falta los límites de cada lote.</li>
+        <li><strong>No proyecta a 30 o 60 días todavía.</strong> Dice cómo estás y qué hacer esta semana. La proyección necesita definir de dónde sale la curva de crecimiento esperada de cada recurso.</li>
+        <li><strong>No trae imágenes satelitales.</strong></li>
+        <li><strong>Las curvas de cada recurso están sin calibrar.</strong> Se usa una curva de referencia de festuca del sudeste bonaerense. Calibrar las propias lleva alrededor de un año, porque hay que hacerlo en las cuatro estaciones; mientras tanto los números son buenos pero mejorables.</li>
+      </ul>
+    </div>
+  </section>
+
+  <p class="cierre">
+    BioM · Proyecto Pasto. Metodología basada en la <em>Guía para el manejo de pasturas en
+    función del stock de pasto y la tasa de crecimiento</em> (Berone y col., INTA Balcarce, 2022)
+    y el material del curso de planificación del pastoreo.
+  </p>
+
+</div>
