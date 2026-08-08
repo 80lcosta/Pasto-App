@@ -96,6 +96,8 @@ export const PERMISOS = {
     'leer:auditoria',
     'escribir:mediciones',
     'escribir:recomendaciones',
+    // El técnico ajusta los objetivos y carga los límites de los potreros.
+    'escribir:configuracion',
   ],
   cliente: ['leer:campo', 'leer:datos', 'leer:auditoria'],
 };

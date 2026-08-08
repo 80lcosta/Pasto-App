@@ -333,12 +333,147 @@ export function crearServidor() {
         return responder(res, 200, { aceptadas: [r.id] });
       }
 
+      if (req.method === 'POST' && ruta === '/api/targets') {
+        if (!puede(usuario.rol, 'escribir:configuracion')) {
+          await auditar({ usuario, accion: 'escritura_denegada', campoId, detalle: { ruta } });
+          return responder(res, 403, { error: 'Solo el técnico ajusta los objetivos' });
+        }
+        const { targets } = req.cuerpo ?? (await leerCuerpo(req));
+        const validado = validarTargets(targets);
+        if (typeof validado === 'string') return responder(res, 400, { error: validado });
+
+        const [previo] = await consultar('select targets from campo where id = $1', [campoId]);
+        await consultar('update campo set targets = $1 where id = $2', [
+          JSON.stringify(validado), campoId,
+        ]);
+        await auditar({
+          usuario,
+          accion: 'ajuste_objetivos',
+          entidad: 'campo',
+          entidadId: campoId,
+          campoId,
+          detalle: { antes: previo?.targets ?? null, despues: validado },
+        });
+        return responder(res, 200, { targets: validado });
+      }
+
+      if (req.method === 'POST' && ruta === '/api/potreros/importar') {
+        if (!puede(usuario.rol, 'escribir:configuracion')) {
+          await auditar({ usuario, accion: 'escritura_denegada', campoId, detalle: { ruta } });
+          return responder(res, 403, { error: 'Solo el técnico carga los límites de los potreros' });
+        }
+        const cuerpo = req.cuerpo ?? (await leerCuerpo(req));
+        const resultado = await importarPotreros(campoId, cuerpo.potreros ?? []);
+        await auditar({
+          usuario,
+          accion: 'importacion_kml',
+          entidad: 'potrero',
+          campoId,
+          detalle: resultado,
+        });
+        return responder(res, 200, resultado);
+      }
+
       responder(res, 404, { error: 'No existe' });
     } catch (error) {
       console.error('[api]', error);
       responder(res, 400, { error: error instanceof Error ? error.message : 'Error' });
     }
   });
+}
+
+/**
+ * Valida los objetivos antes de guardarlos. Devuelve el objeto limpio, o un
+ * texto con el motivo del rechazo: un objetivo mal cargado desalinea todo el
+ * tablero, así que conviene que no entre.
+ */
+export function validarTargets(t) {
+  if (!t || typeof t !== 'object') return 'Faltan los objetivos';
+  const numeros = ['stockKgMSHa', 'entradaKgMSHa', 'salidaKgMSHa'];
+  const limpio = {};
+  for (const clave of numeros) {
+    const v = Number(t[clave]);
+    if (!Number.isFinite(v) || v < 0 || v > 20000) {
+      return `El valor de ${clave} tiene que ser un número entre 0 y 20.000`;
+    }
+    limpio[clave] = Math.round(v);
+  }
+  if (limpio.salidaKgMSHa >= limpio.entradaKgMSHa) {
+    return 'La biomasa de salida tiene que ser menor que la de entrada';
+  }
+  if (limpio.stockKgMSHa < limpio.salidaKgMSHa || limpio.stockKgMSHa > limpio.entradaKgMSHa) {
+    return 'El stock objetivo tiene que quedar entre la biomasa de salida y la de entrada';
+  }
+  const datum = t.datum === 'sobre_5cm' ? 'sobre_5cm' : 'ras_suelo';
+  const coef = t.coefConsumo === undefined ? undefined : Number(t.coefConsumo);
+  if (coef !== undefined && (!Number.isFinite(coef) || coef <= 0 || coef > 0.15)) {
+    return 'El consumo tiene que estar entre 0 y 15 % del peso vivo';
+  }
+  return { ...limpio, datum, ...(coef !== undefined ? { coefConsumo: coef } : {}) };
+}
+
+/** Nombre de potrero → identificador estable y legible. */
+export function idDeNombre(nombre) {
+  return (
+    nombre
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[̀-ͯ]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .slice(0, 48) || 'potrero'
+  );
+}
+
+/**
+ * Guarda los potreros que vinieron de un KML. Si el nombre coincide con uno
+ * que ya existe, se le agrega la geometría y la superficie sin tocar el resto
+ * (recurso, mediciones); si no existe, se crea.
+ */
+async function importarPotreros(campoId, potreros) {
+  const existentes = await consultar('select id, nombre from potrero where campo_id = $1', [campoId]);
+  const porNombre = new Map(existentes.map((p) => [p.nombre.trim().toLowerCase(), p.id]));
+  const [recurso] = await consultar(
+    'select id from recurso where campo_id = $1 order by id limit 1',
+    [campoId],
+  );
+
+  const actualizados = [];
+  const creados = [];
+  const omitidos = [];
+  let orden = existentes.length;
+
+  for (const p of potreros) {
+    const nombre = String(p?.nombre ?? '').trim();
+    const superficie = Number(p?.superficieHa);
+    if (!nombre || !Number.isFinite(superficie) || superficie <= 0 || !p?.geometria) {
+      omitidos.push(nombre || '(sin nombre)');
+      continue;
+    }
+    const idExistente = porNombre.get(nombre.toLowerCase());
+    if (idExistente) {
+      await consultar(
+        'update potrero set geometria = $1, superficie_ha = $2 where id = $3',
+        [JSON.stringify(p.geometria), superficie, idExistente],
+      );
+      actualizados.push(nombre);
+    } else {
+      if (!recurso) {
+        omitidos.push(nombre);
+        continue;
+      }
+      let id = idDeNombre(nombre);
+      if (existentes.some((e) => e.id === id)) id = `${id}-${++orden}`;
+      await consultar(
+        `insert into potrero (id, campo_id, orden, nombre, superficie_ha, sup_ganadera_ha,
+                              recurso_id, descripcion, geometria)
+         values ($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
+        [id, campoId, ++orden, nombre, superficie, superficie, recurso.id, '', JSON.stringify(p.geometria)],
+      );
+      creados.push(nombre);
+    }
+  }
+  return { creados, actualizados, omitidos };
 }
 
 /**

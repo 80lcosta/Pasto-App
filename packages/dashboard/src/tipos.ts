@@ -13,6 +13,8 @@ export interface Recurso {
 
 export interface Potrero {
   id: string;
+  /** Límites del potrero en GeoJSON, si se cargaron desde un KML. */
+  geometria?: import('@pasto/core').GeometriaGeoJson;
   orden: number;
   nombre: string;
   superficieHa: number;

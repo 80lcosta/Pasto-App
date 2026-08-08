@@ -104,3 +104,51 @@ export async function publicarRecomendacion(
     return false;
   }
 }
+
+export interface RespuestaGuardado {
+  ok: boolean;
+  error?: string;
+}
+
+/** Ajuste de los objetivos del campo (solo técnico). */
+export async function guardarTargets(
+  campoId: string,
+  targets: Record<string, unknown>,
+): Promise<RespuestaGuardado> {
+  try {
+    const resp = await fetch(`${URL_SERVIDOR}/api/targets`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', authorization: `Bearer ${tokenGuardado()}` },
+      body: JSON.stringify({ campoId, targets }),
+    });
+    if (resp.ok) return { ok: true };
+    const datos = (await resp.json().catch(() => ({}))) as { error?: string };
+    return { ok: false, error: datos.error ?? `Error ${resp.status}` };
+  } catch {
+    return { ok: false, error: 'No se pudo contactar al servidor' };
+  }
+}
+
+export interface ResultadoImportacion extends RespuestaGuardado {
+  creados?: string[];
+  actualizados?: string[];
+  omitidos?: string[];
+}
+
+/** Carga de los límites de los potreros leídos de un KML (solo técnico). */
+export async function importarPotreros(
+  campoId: string,
+  potreros: unknown[],
+): Promise<ResultadoImportacion> {
+  try {
+    const resp = await fetch(`${URL_SERVIDOR}/api/potreros/importar`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', authorization: `Bearer ${tokenGuardado()}` },
+      body: JSON.stringify({ campoId, potreros }),
+    });
+    const datos = (await resp.json().catch(() => ({}))) as ResultadoImportacion & { error?: string };
+    return resp.ok ? { ...datos, ok: true } : { ok: false, error: datos.error ?? `Error ${resp.status}` };
+  } catch {
+    return { ok: false, error: 'No se pudo contactar al servidor' };
+  }
+}

@@ -4,11 +4,21 @@
  */
 import assert from 'node:assert/strict';
 import { after, before, describe, it } from 'node:test';
+import { campo as campoDemo } from '@pasto/campo-demo';
 import { cantidadPuntos, sembrar } from '../src/sembrar.mjs';
 import { cerrar, consultar, unaFila } from '../src/db.mjs';
 
 before(async () => {
   await sembrar();
+  // Importar un KML actualiza la superficie de los potreros al valor del
+  // dibujo (es su función), así que acá se restablece la base sembrada para
+  // comprobar el campo piloto tal como se carga la primera vez.
+  for (const p of campoDemo.potreros) {
+    await consultar(
+      'update potrero set superficie_ha = $1, sup_ganadera_ha = $2 where id = $3',
+      [p.superficieHa, p.supGanaderaHa, p.id],
+    );
+  }
 });
 after(async () => {
   await cerrar();

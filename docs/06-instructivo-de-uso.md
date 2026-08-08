@@ -179,6 +179,21 @@ Cuando la registrás, **queda guardada con la fecha, tu nombre y los números de
 recorrida**. Eso es lo que después permite mirar para atrás y entender por qué se decidió
 lo que se decidió.
 
+## Cargar el campo y ajustar los objetivos
+
+En la solapa **Configuración**:
+
+- **Objetivos del campo** — los tres números con los que se calcula todo: biomasa de entrada,
+  stock objetivo y biomasa de salida. Se pueden ir ajustando a medida que conocés el campo;
+  cada cambio queda registrado con el valor anterior.
+- **Límites de los potreros** — subís el archivo **KML** que exportás de Google Earth y cada
+  potrero dibujado se carga con su superficie calculada. Antes de guardar te muestra la lista
+  para revisar: cuáles actualizan un potrero que ya existe y cuáles se crean nuevos. Un potrero
+  que ya tenía mediciones no las pierde: solo se le agrega el límite.
+
+Con los límites cargados aparece el **mapa del campo**, con cada potrero pintado según cómo
+está hoy.
+
 ## Historial y exportes
 
 - **Historial**: potrero por potrero, todas las mediciones con quién las cargó.
@@ -290,8 +305,10 @@ aunque falte stock— y esas las sigue tomando el técnico.
 
 Para ser claros, porque conviene saberlo de antemano:
 
-- **No tiene el mapa del campo dibujado.** Hoy los potreros se ven en una tabla, no en un
-  plano. Para dibujarlos hacen falta los límites de cada lote.
+- **El mapa no tiene foto satelital de fondo.** Se dibujan los límites de los potreros
+  (los que subiste por KML), sin imagen aérea abajo.
+- **Todavía no se pueden dibujar los potreros desde el celular**, caminando el alambrado.
+  Por ahora se cargan con el KML de Google Earth.
 - **No proyecta a 30 o 60 días todavía.** Te dice cómo estás y qué hacer esta semana. La
   proyección hacia adelante necesita definir de dónde sale la curva de crecimiento
   esperada de cada recurso.

@@ -20,8 +20,10 @@ import { Recomendaciones } from './vistas/Recomendaciones.js';
 import { Historial } from './vistas/Historial.js';
 import { Auditoria } from './vistas/Auditoria.js';
 import { Informes } from './vistas/Informes.js';
+import { Mapa } from './vistas/Mapa.js';
+import { Configuracion } from './vistas/Configuracion.js';
 
-type Seccion = 'estado' | 'historial' | 'informes' | 'auditoria';
+type Seccion = 'estado' | 'historial' | 'informes' | 'auditoria' | 'configuracion';
 
 export function App() {
   const [usuario, setUsuario] = useState<Usuario | null>(usuarioGuardado());
@@ -95,6 +97,7 @@ export function App() {
     { id: 'historial', rotulo: 'Historial' },
     { id: 'informes', rotulo: 'Informes' },
     { id: 'auditoria', rotulo: 'Auditoría' },
+    ...(esCliente ? [] : [{ id: 'configuracion' as const, rotulo: 'Configuración' }]),
   ];
 
   return (
@@ -164,6 +167,7 @@ export function App() {
               cerrados={cerrados}
               alternarCerrado={esCliente ? undefined : alternarCerrado}
             />
+            <Mapa a={analisis} />
             <Evolucion serie={serie} campo={datos.campo} />
 
             {!esCliente && (
@@ -189,6 +193,10 @@ export function App() {
         )}
 
         {datos && seccion === 'auditoria' && <Auditoria />}
+
+        {datos && seccion === 'configuracion' && !esCliente && (
+          <Configuracion campo={datos.campo} alCambiar={cargar} />
+        )}
 
         <p className="pie">
           Metodología: Guía para el manejo de pasturas en función del stock de pasto y la tasa

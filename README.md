@@ -6,7 +6,7 @@ trazabilidad para tres perfiles: **medidor**, **técnico** y **cliente**.
 
 ## Estado
 
-**Plan aprobado — las cinco iteraciones completas** (91 tests en verde).
+**Plan aprobado — las cinco iteraciones completas, más KML y ajustes** (104 tests en verde).
 
 ### Documentación
 
@@ -20,6 +20,8 @@ trazabilidad para tres perfiles: **medidor**, **técnico** y **cliente**.
   técnico: cuña, decisiones y recomendaciones.
 - [docs/05-iteracion-4-portal-y-backend.md](docs/05-iteracion-4-portal-y-backend.md) —
   backend con roles y auditoría, portal del cliente y exportes.
+- [docs/07-kml-mapa-y-ajustes.md](docs/07-kml-mapa-y-ajustes.md) — importación de KML,
+  mapa del campo y objetivos editables.
 - **[docs/06-instructivo-de-uso.md](docs/06-instructivo-de-uso.md) — instructivo de uso en
   lenguaje llano, un capítulo por perfil.** Versión web para compartir:
   [docs/instructivo.html](docs/instructivo.html).
@@ -58,6 +60,6 @@ La conexión a la base se configura con `PASTO_BD`
 ## Verificación
 
 ```bash
-npm test        # 91 tests: motor contra las fuentes, API, tablero y app
+npm test        # 104 tests: motor contra las fuentes, API, tablero y app
 npm run typecheck
 ```

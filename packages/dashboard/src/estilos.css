@@ -173,3 +173,15 @@ select.entrada { width: 100%; background: var(--panel); }
   .boton { display: none; }
   textarea.entrada, input.entrada { display: none; }
 }
+
+/* Mapa del campo */
+.mapa {
+  width: 100%;
+  max-height: 520px;
+  background: var(--papel-mapa, var(--fondo));
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  display: block;
+}
+.rejilla.tres { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+input[type="file"].entrada { padding: 12px; cursor: pointer; }

@@ -7,3 +7,4 @@ export * from './demanda.js';
 export * from './balance.js';
 export * from './cuna.js';
 export * from './xlsx.js';
+export * from './kml.js';
