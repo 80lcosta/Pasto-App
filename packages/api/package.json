@@ -1,0 +1,18 @@
+{
+  "name": "@pasto/api",
+  "version": "0.1.0",
+  "description": "API del Proyecto Pasto sobre PostgreSQL: sincronización, roles, permisos y auditoría",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node src/servidor.mjs",
+    "migrar": "node src/migrar.mjs",
+    "sembrar": "node src/sembrar.mjs",
+    "test": "node --test test/*.test.mjs",
+    "sembrar:demo": "node src/sembrar-demo.mjs"
+  },
+  "dependencies": {
+    "@pasto/campo-demo": "0.1.0",
+    "pg": "^8.13.1"
+  }
+}

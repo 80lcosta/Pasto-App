@@ -1,20 +1,19 @@
 /**
- * Estado de sincronización y configuración mínima del dispositivo.
+ * Estado de sincronización, datos de la sesión y salida.
  */
 import { useEffect, useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { db, escribirMeta, leerMeta } from '../db.js';
-import { sincronizar, URL_SERVIDOR_DEFAULT, type ResultadoSync } from '../sync.js';
+import { db } from '../db.js';
+import { salir, usuarioGuardado, type Usuario } from '../sesion.js';
+import { sincronizar, type ResultadoSync } from '../sync.js';
 
-export function Estado() {
-  const [usuario, setUsuario] = useState('');
-  const [urlServidor, setUrlServidor] = useState('');
+export function Estado({ alSalir }: { alSalir: () => void }) {
+  const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [resultado, setResultado] = useState<ResultadoSync | null>(null);
   const [sincronizando, setSincronizando] = useState(false);
 
   useEffect(() => {
-    void leerMeta('usuario', 'medidor').then(setUsuario);
-    void leerMeta('urlServidor', URL_SERVIDOR_DEFAULT).then(setUrlServidor);
+    void usuarioGuardado().then(setUsuario);
   }, []);
 
   const datos = useLiveQuery(async () => ({
@@ -23,6 +22,7 @@ export function Estado() {
     totalMediciones: await db.mediciones.count(),
     ultimaSync: (await db.meta.get('ultimaSync'))?.valor,
     campo: (await db.meta.get('campo'))?.valor ?? '—',
+    servidor: (await db.meta.get('urlServidor'))?.valor ?? '—',
   }));
   if (!datos) return <p className="nota">Cargando…</p>;
 
@@ -32,6 +32,17 @@ export function Estado() {
     setSincronizando(true);
     setResultado(await sincronizar());
     setSincronizando(false);
+  };
+
+  const cerrarSesion = async () => {
+    if (pendientes > 0) {
+      const seguro = window.confirm(
+        `Tenés ${pendientes} registros sin enviar. Si salís, quedan guardados en el teléfono hasta que vuelvas a ingresar. ¿Salir igual?`,
+      );
+      if (!seguro) return;
+    }
+    await salir();
+    alSalir();
   };
 
   return (
@@ -68,23 +79,17 @@ export function Estado() {
       </div>
 
       <div className="tarjeta">
-        <h2>Este equipo</h2>
-        <label className="etiqueta" htmlFor="usuario">Quién mide (queda registrado en cada dato)</label>
-        <input
-          id="usuario"
-          className="entrada"
-          value={usuario}
-          onChange={(e) => setUsuario(e.target.value)}
-          onBlur={() => escribirMeta('usuario', usuario.trim() || 'medidor')}
-        />
-        <label className="etiqueta" htmlFor="servidor">Servidor de sincronización</label>
-        <input
-          id="servidor"
-          className="entrada"
-          value={urlServidor}
-          onChange={(e) => setUrlServidor(e.target.value)}
-          onBlur={() => escribirMeta('urlServidor', urlServidor.trim() || URL_SERVIDOR_DEFAULT)}
-        />
+        <h2>Sesión</h2>
+        <p className="sub">
+          {usuario ? `${usuario.nombre} · ${usuario.rol}` : 'Sin datos'} · Servidor: {datos.servidor}
+        </p>
+        <p className="nota">
+          Cada medición queda registrada con tu nombre y la fecha y hora en que la cargaste.
+        </p>
+        <div style={{ height: 10 }} />
+        <button className="boton suave" onClick={cerrarSesion}>
+          Cerrar sesión
+        </button>
       </div>
     </div>
   );

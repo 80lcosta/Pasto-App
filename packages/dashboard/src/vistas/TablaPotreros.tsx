@@ -12,14 +12,17 @@ export function TablaPotreros({
 }: {
   a: AnalisisRecorrida;
   cerrados: Set<string>;
-  alternarCerrado: (potreroId: string) => void;
+  /** Si no se pasa (perfil cliente), la tabla es de solo lectura. */
+  alternarCerrado?: (potreroId: string) => void;
 }) {
+  const editable = alternarCerrado !== undefined;
   return (
     <div className="panel">
       <h2>Potreros</h2>
       <p className="sub">
-        Estado al {a.fecha.split('-').reverse().join('/')}. Cerrar un potrero lo saca de la
-        rotación para confección de reservas y lo excluye del cálculo.
+        Estado al {a.fecha.split('-').reverse().join('/')}.
+        {editable &&
+          ' Cerrar un potrero lo saca de la rotación para confección de reservas y lo excluye del cálculo.'}
       </p>
       <div style={{ overflowX: 'auto' }}>
         <table>
@@ -32,7 +35,7 @@ export function TablaPotreros({
               <th className="num">Descanso</th>
               <th className="num">Ocupación</th>
               <th>Estado</th>
-              <th>Reservas</th>
+              {editable && <th>Reservas</th>}
             </tr>
           </thead>
           <tbody>
@@ -64,15 +67,17 @@ export function TablaPotreros({
                       {cerrado ? 'Cerrado' : ROTULO_ESTADO[s.estado]}
                     </span>
                   </td>
-                  <td>
-                    <button
-                      className="boton secundario"
-                      style={{ padding: '6px 12px', fontSize: 13 }}
-                      onClick={() => alternarCerrado(s.potrero.id)}
-                    >
-                      {cerrado ? 'Reabrir' : 'Cerrar'}
-                    </button>
-                  </td>
+                  {editable && (
+                    <td>
+                      <button
+                        className="boton secundario"
+                        style={{ padding: '6px 12px', fontSize: 13 }}
+                        onClick={() => alternarCerrado(s.potrero.id)}
+                      >
+                        {cerrado ? 'Reabrir' : 'Cerrar'}
+                      </button>
+                    </td>
+                  )}
                 </tr>
               );
             })}

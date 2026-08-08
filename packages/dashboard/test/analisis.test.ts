@@ -7,7 +7,7 @@ import { describe, expect, it } from 'vitest';
 import campoJson from '@pasto/campo-demo/loma-alta.json';
 import demoJson from '@pasto/campo-demo/recorridas-demo.json';
 import { agruparRecorridas, analizarRecorrida, potrerosEnPastoreo, serieStock } from '../src/analisis.js';
-import { medicionesDeDemo } from '../src/demo.js';
+import { medicionesDeDemo } from './ayudas.js';
 import type { Campo, Evento, Medicion } from '../src/tipos.js';
 
 const campo = campoJson as unknown as Campo;
@@ -111,6 +111,7 @@ describe('Análisis de la recorrida de demostración (Loma Alta, 8 de agosto)', 
 describe('Equivalencia punta a punta con el caso publicado (Guía §3.1)', () => {
   // Geometría exacta de la Guía: potreros A–F, 137 ha, rodeo de 685 × 250 kg.
   const campoGuia: Campo = {
+    campoId: 'guia-31',
     campo: 'Guía §3.1',
     targets: { stockKgMSHa: 1500, entradaKgMSHa: 2000, salidaKgMSHa: 1000, datum: 'ras_suelo' },
     recursos: campo.recursos,
@@ -158,6 +159,7 @@ describe('Equivalencia punta a punta con el caso publicado (Guía §3.1)', () =>
 
 describe('Recorrida con exceso de forraje (Guía §3.2)', () => {
   const campoGuia: Campo = {
+    campoId: 'guia-32',
     campo: 'Guía §3.2',
     targets: { stockKgMSHa: 1500, entradaKgMSHa: 2000, salidaKgMSHa: 1000, datum: 'ras_suelo' },
     recursos: campo.recursos,

@@ -6,7 +6,7 @@
     "packages/*"
   ],
   "scripts": {
-    "test": "npm --workspace @pasto/core run test && npm --workspace @pasto/app run test && npm --workspace @pasto/dashboard run test",
+    "test": "npm --workspace @pasto/core run test && npm --workspace @pasto/app run test && npm --workspace @pasto/dashboard run test && npm --workspace @pasto/api run test",
     "typecheck": "npm --workspace @pasto/core run typecheck && npm --workspace @pasto/app run typecheck && npm --workspace @pasto/dashboard run typecheck",
     "app:dev": "npm --workspace @pasto/app run dev",
     "app:build": "npm --workspace @pasto/app run build",
@@ -14,7 +14,10 @@
     "tablero:dev": "npm --workspace @pasto/dashboard run dev",
     "tablero:build": "npm --workspace @pasto/dashboard run build",
     "tablero:preview": "npm --workspace @pasto/dashboard run preview",
-    "sync:dev": "npm --workspace @pasto/server-dev run dev"
+    "api:dev": "npm --workspace @pasto/api run dev",
+    "api:migrar": "npm --workspace @pasto/api run migrar",
+    "api:sembrar": "npm --workspace @pasto/api run sembrar",
+    "api:demo": "npm --workspace @pasto/api run sembrar:demo"
   },
   "devDependencies": {
     "playwright-core": "^1.62.1"

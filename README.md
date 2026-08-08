@@ -6,32 +6,56 @@ trazabilidad para tres perfiles: **medidor**, **técnico** y **cliente**.
 
 ## Estado
 
-**Plan aprobado — Iteraciones 1, 2 y 3 completas** (66 tests en verde).
+**Plan aprobado — Iteraciones 1 a 4 completas** (91 tests en verde).
+Falta la Iteración 5: el instructivo de uso por perfil.
+
+### Documentación
 
 - [docs/01-analisis-y-plan.md](docs/01-analisis-y-plan.md) — análisis de los insumos,
   fórmulas con su fuente, dudas y arquitectura aprobada.
 - [docs/02-validacion-motor.md](docs/02-validacion-motor.md) — números del motor lado a
   lado con la Guía INTA, el Excel de Loma Alta y los artículos.
-- [docs/03-iteracion-2-app-medidor.md](docs/03-iteracion-2-app-medidor.md) — la app de
-  campo del medidor: offline, sincronización y cómo probarla.
-- [docs/04-iteracion-3-dashboard.md](docs/04-iteracion-3-dashboard.md) — el tablero del
-  técnico: cuña, decisiones de la recorrida y recomendaciones.
-- [packages/core](packages/core) — `@pasto/core`, motor de cálculo (TypeScript, sin
-  dependencias), compartido por app, tablero y servidor.
-- [packages/app](packages/app) — PWA de campo (perfil medidor), offline-first con
-  IndexedDB y cola de sincronización. Piloto: Loma Alta.
-- [packages/dashboard](packages/dashboard) — tablero del técnico.
-- [packages/campo-demo](packages/campo-demo) — datos del campo piloto, compartidos.
-- [packages/server-dev](packages/server-dev) — servidor de desarrollo (API de sincronización
-  y recomendaciones).
+- [docs/03-iteracion-2-app-medidor.md](docs/03-iteracion-2-app-medidor.md) — app de campo
+  del medidor: offline y sincronización.
+- [docs/04-iteracion-3-dashboard.md](docs/04-iteracion-3-dashboard.md) — tablero del
+  técnico: cuña, decisiones y recomendaciones.
+- [docs/05-iteracion-4-portal-y-backend.md](docs/05-iteracion-4-portal-y-backend.md) —
+  backend con roles y auditoría, portal del cliente y exportes.
 
-## Desarrollo
+### Paquetes
+
+| Paquete | Qué es |
+|---|---|
+| [packages/core](packages/core) | Motor de cálculo agronómico y generador de Excel (TypeScript, sin dependencias). Compartido por app, tablero y servidor |
+| [packages/api](packages/api) | API sobre PostgreSQL: sesiones, roles, permisos, sincronización y auditoría |
+| [packages/app](packages/app) | PWA de campo (perfil medidor), offline-first con IndexedDB |
+| [packages/dashboard](packages/dashboard) | Tablero del técnico y portal del cliente (según el rol) |
+| [packages/campo-demo](packages/campo-demo) | Datos del campo piloto Loma Alta |
+
+## Puesta en marcha
+
+Requiere Node ≥ 20 y PostgreSQL 16.
 
 ```bash
-npm install          # Node ≥ 20
-npm test             # motor validado contra las fuentes + app + tablero
+npm install
+npm run api:migrar    # crea el esquema
+npm run api:sembrar   # campo piloto Loma Alta + usuarios de prueba
+npm run api:demo      # opcional: historial de recorridas de demostración
+
+npm run api:dev       # API      → http://localhost:8787
+npm run app:dev       # medidor  → http://localhost:5173
+npm run tablero:dev   # tablero  → http://localhost:5174
+```
+
+Usuarios de prueba (cambiar antes de producción): `benjamin@biom.test` / `medidor123`,
+`pancho@biom.test` / `tecnico123`, `cliente@lomaalta.test` / `cliente123`.
+
+La conexión a la base se configura con `PASTO_BD`
+(por defecto `postgres://pasto:pasto@localhost:5432/pasto`).
+
+## Verificación
+
+```bash
+npm test        # 91 tests: motor contra las fuentes, API, tablero y app
 npm run typecheck
-npm run sync:dev     # servidor (dev, puerto 8787)
-npm run app:dev      # app del medidor   → http://localhost:5173
-npm run tablero:dev  # tablero del técnico → http://localhost:5174
 ```

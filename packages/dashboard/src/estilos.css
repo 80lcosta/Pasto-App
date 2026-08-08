@@ -139,3 +139,37 @@ input.entrada { padding: 10px; font-size: 15px; border: 1px solid var(--borde); 
 
 .pie { font-size: 12px; color: var(--gris); margin-top: 8px; }
 .cargando { padding: 40px; text-align: center; color: var(--gris); }
+
+/* Ingreso */
+.ingreso { max-width: 420px; margin: 60px auto; padding: 0 20px; }
+.ingreso h2 { font-size: 20px; }
+.entrada.bloque { width: 100%; }
+label.etiqueta { display: block; font-size: 13px; font-weight: 700; color: var(--gris); margin: 12px 2px 4px; }
+select.entrada { width: 100%; background: var(--panel); }
+
+.boton-enlace {
+  background: none; border: none; color: inherit; cursor: pointer;
+  text-decoration: underline; font-size: inherit; padding: 0 2px;
+}
+
+/* Solapas por sección */
+.solapas { display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap; }
+.solapas button {
+  background: rgba(255,255,255,0.12); color: #fff; border: none;
+  padding: 8px 14px; border-radius: 8px 8px 0 0; cursor: pointer;
+  font-size: 14px; font-weight: 600;
+}
+.solapas button.activa { background: var(--fondo); color: var(--verde-oscuro); }
+
+.subtitulo { font-size: 15px; color: var(--verde-oscuro); margin: 18px 0 8px; }
+
+/* Impresión: el informe en PDF sale del propio navegador */
+@media print {
+  .sin-imprimir, .solapas, .cabecera { display: none !important; }
+  body { background: #fff; font-size: 12px; }
+  .tablero { max-width: none; padding: 0; }
+  .panel { border: 1px solid #ccc; break-inside: avoid; page-break-inside: avoid; margin-bottom: 10px; }
+  .indicador { border: 1px solid #ccc; }
+  .boton { display: none; }
+  textarea.entrada, input.entrada { display: none; }
+}

@@ -3,7 +3,7 @@
  * mediciones con la misma forma que las que carga el medidor, para que el
  * dashboard procese siempre la misma estructura de datos.
  */
-import type { Campo, Evento, Medicion } from './tipos.js';
+import type { Campo, Evento, Medicion } from '../src/tipos.js';
 
 export interface RecorridaDemo {
   fecha: string;

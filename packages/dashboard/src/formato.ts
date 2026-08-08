@@ -1,7 +1,13 @@
-export const kg = (v: number): string => Math.round(v).toLocaleString('es-AR');
+const esNumero = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v);
 
-export const dec = (v: number, decimales = 1): string =>
-  v.toLocaleString('es-AR', { minimumFractionDigits: decimales, maximumFractionDigits: decimales });
+/** Los formateadores toleran datos faltantes: muestran "—", nunca "NaN". */
+export const kg = (v: number | undefined | null): string =>
+  esNumero(v) ? Math.round(v).toLocaleString('es-AR') : '—';
+
+export const dec = (v: number | undefined | null, decimales = 1): string =>
+  esNumero(v)
+    ? v.toLocaleString('es-AR', { minimumFractionDigits: decimales, maximumFractionDigits: decimales })
+    : '—';
 
 export const pct = (v: number): string => `${Math.round(v * 100)} %`;
 

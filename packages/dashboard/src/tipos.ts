@@ -27,12 +27,39 @@ export interface Rodeo {
   categorias: CategoriaRodeo[];
 }
 
+export interface Punto {
+  id: string;
+  potreroId: string;
+  nombre: string;
+  orden: number;
+  activo: boolean;
+}
+
 export interface Campo {
+  campoId: string;
   campo: string;
   targets: TargetsPlataforma;
   recursos: Recurso[];
   potreros: Potrero[];
+  puntos?: Punto[];
   rodeo: Rodeo;
+}
+
+export interface Usuario {
+  id: string;
+  nombre: string;
+  email?: string;
+  rol: 'medidor' | 'tecnico' | 'cliente';
+}
+
+export interface Auditoria {
+  cuando: string;
+  usuario: string | null;
+  rol: string | null;
+  accion: string;
+  entidad: string | null;
+  entidadId: string | null;
+  detalle: Record<string, unknown> | null;
 }
 
 export interface Medicion {
@@ -46,6 +73,8 @@ export interface Medicion {
   curva: CurvaCalibracion & { datum: Datum };
   usuario: string;
   observaciones?: string;
+  /** Momento en que el servidor la recibió (puede diferir de la medición). */
+  recibidaEn?: string;
 }
 
 export interface Evento {

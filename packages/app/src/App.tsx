@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from './db.js';
+import { tokenGuardado } from './sesion.js';
 import { iniciarSyncAutomatica } from './sync.js';
+import { Ingreso } from './vistas/Ingreso.js';
 import { Recorrida } from './vistas/Recorrida.js';
 import { Punto } from './vistas/Punto.js';
 import { Eventos } from './vistas/Eventos.js';
@@ -13,6 +15,13 @@ export function App() {
   const [vista, setVista] = useState<Vista>('recorrida');
   const [puntoAbierto, setPuntoAbierto] = useState<string | null>(null);
   const [online, setOnline] = useState(navigator.onLine);
+  const [conSesion, setConSesion] = useState<boolean | null>(null);
+
+  const revisarSesion = useCallback(() => {
+    void tokenGuardado().then((t) => setConSesion(Boolean(t)));
+  }, []);
+
+  useEffect(revisarSesion, [revisarSesion]);
 
   useEffect(() => {
     const marcar = () => setOnline(navigator.onLine);
@@ -36,6 +45,21 @@ export function App() {
 
   const campo = useLiveQuery(async () => (await db.meta.get('campo'))?.valor ?? '');
 
+  if (conSesion === null) return <div className="cargando">Cargando…</div>;
+
+  if (!conSesion) {
+    return (
+      <div className="app">
+        <header className="cabecera">
+          <h1>Pasto · Medidor</h1>
+        </header>
+        <main className="contenido">
+          <Ingreso alIngresar={revisarSesion} />
+        </main>
+      </div>
+    );
+  }
+
   const bandaClase = !online ? 'offline' : (pendientes ?? 0) > 0 ? 'pendiente' : 'ok';
   const bandaTexto = !online
     ? `⛰ Sin señal — todo se guarda en el teléfono${(pendientes ?? 0) > 0 ? ` (${pendientes} para enviar)` : ''}`
@@ -56,7 +80,7 @@ export function App() {
           <Punto puntoId={puntoAbierto} volver={() => setPuntoAbierto(null)} />
         )}
         {vista === 'eventos' && <Eventos />}
-        {vista === 'estado' && <Estado />}
+        {vista === 'estado' && <Estado alSalir={revisarSesion} />}
       </main>
       <nav className="nav">
         <button
