@@ -6,7 +6,14 @@
     "packages/*"
   ],
   "scripts": {
-    "test": "npm --workspace @pasto/core run test",
-    "typecheck": "npm --workspace @pasto/core run typecheck"
+    "test": "npm --workspace @pasto/core run test && npm --workspace @pasto/app run test",
+    "typecheck": "npm --workspace @pasto/core run typecheck && npm --workspace @pasto/app run typecheck",
+    "app:dev": "npm --workspace @pasto/app run dev",
+    "app:build": "npm --workspace @pasto/app run build",
+    "app:preview": "npm --workspace @pasto/app run preview",
+    "sync:dev": "npm --workspace @pasto/server-dev run dev"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.62.1"
   }
 }

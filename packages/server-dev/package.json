@@ -1,0 +1,10 @@
+{
+  "name": "@pasto/server-dev",
+  "version": "0.1.0",
+  "description": "Servidor de sincronización de desarrollo (sin dependencias). El backend definitivo (Postgres/PostGIS) llega con el dashboard.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node src/servidor.mjs"
+  }
+}
