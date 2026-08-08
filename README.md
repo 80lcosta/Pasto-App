@@ -40,7 +40,14 @@ trazabilidad para tres perfiles: **medidor**, **técnico** y **cliente**.
 
 ## Ver una demostración sin instalar nada
 
-Las dos aplicaciones traen un botón **“Entrar a la demostración”**: cargan el campo Loma Alta
+Hay una versión de la demostración empaquetada en **un solo archivo** que se abre en
+cualquier navegador sin instalar nada:
+
+```bash
+node scripts/armar-demo.mjs   # → docs/demo-tablero.html y docs/demo-medidor.html
+```
+
+Además, las dos aplicaciones traen un botón **“Entrar a la demostración”**: cargan el campo Loma Alta
 de ejemplo y funcionan enteras dentro del navegador, sin servidor ni base de datos. Alcanza
 con publicar los archivos estáticos (`npm run app:build` y `npm run tablero:build`) en
 cualquier servicio gratuito de páginas. Ver [docs/08-publicar-gratis.md](docs/08-publicar-gratis.md).

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from './db.js';
-import { enModoDemo, tokenGuardado } from './sesion.js';
+import { entrarEnModoDemo, enModoDemo, SOLO_DEMO, tokenGuardado } from './sesion.js';
 import { iniciarSyncAutomatica } from './sync.js';
 import { Ingreso } from './vistas/Ingreso.js';
 import { Recorrida } from './vistas/Recorrida.js';
@@ -18,6 +18,11 @@ export function App() {
   const [conSesion, setConSesion] = useState<boolean | null>(null);
 
   const revisarSesion = useCallback(() => {
+    if (SOLO_DEMO) {
+      // La versión que se comparte por enlace entra sola a la demostración.
+      void entrarEnModoDemo().then(() => setConSesion(true));
+      return;
+    }
     void Promise.all([tokenGuardado(), enModoDemo()]).then(([t, demo]) =>
       setConSesion(Boolean(t) || demo),
     );

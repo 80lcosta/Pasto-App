@@ -20,21 +20,51 @@ const CLAVE_USUARIO = 'pasto.usuario';
 const CLAVE_DEMO = 'pasto.demo';
 
 /**
+ * Compilación de solo demostración: la página se publica sola, sin servidor
+ * ni cuenta. Se usa para la versión que se comparte por enlace.
+ */
+export const SOLO_DEMO = import.meta.env['VITE_SOLO_DEMO'] === '1';
+
+/** El almacenamiento puede estar bloqueado (páginas embebidas): no debe romper. */
+function guardado(clave: string): string | null {
+  try {
+    return localStorage.getItem(clave);
+  } catch {
+    return null;
+  }
+}
+function guardar(clave: string, valor: string): void {
+  try {
+    localStorage.setItem(clave, valor);
+  } catch {
+    /* sin almacenamiento: la sesión dura lo que dura la pestaña */
+  }
+}
+function borrar(clave: string): void {
+  try {
+    localStorage.removeItem(clave);
+  } catch {
+    /* nada que borrar */
+  }
+}
+
+/**
  * En modo demostración todo ocurre dentro del navegador: no hay servidor ni
  * base de datos. Sirve para mostrar la herramienta sin pagar hosting.
  */
-export const enModoDemo = (): boolean => localStorage.getItem(CLAVE_DEMO) === 'si';
+export const enModoDemo = (): boolean => SOLO_DEMO || guardado(CLAVE_DEMO) === 'si';
 
 export function entrarEnModoDemo(): Usuario {
-  localStorage.setItem(CLAVE_DEMO, 'si');
-  localStorage.setItem(CLAVE_USUARIO, JSON.stringify(USUARIO_DEMO));
+  guardar(CLAVE_DEMO, 'si');
+  guardar(CLAVE_USUARIO, JSON.stringify(USUARIO_DEMO));
   return USUARIO_DEMO;
 }
 
-export const tokenGuardado = (): string => localStorage.getItem(CLAVE_TOKEN) ?? '';
+export const tokenGuardado = (): string => guardado(CLAVE_TOKEN) ?? '';
 
 export const usuarioGuardado = (): Usuario | null => {
-  const crudo = localStorage.getItem(CLAVE_USUARIO);
+  if (SOLO_DEMO) return USUARIO_DEMO;
+  const crudo = guardado(CLAVE_USUARIO);
   return crudo ? (JSON.parse(crudo) as Usuario) : null;
 };
 
@@ -75,23 +105,23 @@ export async function ingresar(email: string, clave: string): Promise<Usuario> {
     throw new ErrorApi(datos.error ?? 'No se pudo ingresar', resp.status);
   }
   const sesion = (await resp.json()) as Sesion;
-  localStorage.setItem(CLAVE_TOKEN, sesion.token);
-  localStorage.setItem(CLAVE_USUARIO, JSON.stringify(sesion.usuario));
+  guardar(CLAVE_TOKEN, sesion.token);
+  guardar(CLAVE_USUARIO, JSON.stringify(sesion.usuario));
   return sesion.usuario;
 }
 
 export async function salir(): Promise<void> {
   if (enModoDemo()) {
-    localStorage.removeItem(CLAVE_DEMO);
-    localStorage.removeItem(CLAVE_USUARIO);
+    borrar(CLAVE_DEMO);
+    borrar(CLAVE_USUARIO);
     return;
   }
   await fetch(`${URL_SERVIDOR}/api/salir`, {
     method: 'POST',
     headers: { authorization: `Bearer ${tokenGuardado()}` },
   }).catch(() => undefined);
-  localStorage.removeItem(CLAVE_TOKEN);
-  localStorage.removeItem(CLAVE_USUARIO);
+  borrar(CLAVE_TOKEN);
+  borrar(CLAVE_USUARIO);
 }
 
 export interface DatosDashboard {

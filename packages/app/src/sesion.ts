@@ -4,8 +4,15 @@
  */
 import { db, escribirMeta, leerMeta } from './db.js';
 import type { PotreroLocal, PuntoLocal, RecursoLocal, RodeoLocal } from './db.js';
+import * as demo from './campo-demo.js';
 
 export const URL_SERVIDOR_DEFAULT = 'http://localhost:8787';
+
+/**
+ * Compilación de solo demostración: la app se abre sin cuenta ni servidor.
+ * Se usa para la versión que se comparte por enlace.
+ */
+export const SOLO_DEMO = import.meta.env['VITE_SOLO_DEMO'] === '1';
 
 export interface Usuario {
   id: string;
@@ -27,11 +34,11 @@ export async function tokenGuardado(): Promise<string> {
  * que se mida queda solo en el equipo y no se sincroniza con nadie.
  */
 export async function enModoDemo(): Promise<boolean> {
-  return (await leerMeta('modoDemo', '')) === 'si';
+  return SOLO_DEMO || (await leerMeta('modoDemo', '')) === 'si';
 }
 
 export async function entrarEnModoDemo(): Promise<void> {
-  const { campo, potreros, recursos, puntos, rodeo } = await import('./campo-demo.js');
+  const { campo, potreros, recursos, puntos, rodeo } = demo;
   await db.transaction('rw', [db.recursos, db.potreros, db.puntos, db.rodeos, db.meta], async () => {
     await db.recursos.bulkPut(recursos);
     await db.potreros.bulkPut(potreros);

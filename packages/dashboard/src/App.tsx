@@ -4,6 +4,7 @@ import {
   cargarDatos,
   enModoDemo,
   publicarRecomendacion,
+  SOLO_DEMO,
   salir,
   usuarioGuardado,
   type DatosDashboard,
@@ -127,9 +128,11 @@ export function App() {
                 </button>{' '}
               </>
             )}
-            <button className="boton-enlace" onClick={cerrarSesion}>
-              salir
-            </button>
+            {!SOLO_DEMO && (
+              <button className="boton-enlace" onClick={cerrarSesion}>
+                salir
+              </button>
+            )}
           </span>
         </div>
         <nav className="interior solapas">

@@ -4,7 +4,7 @@
 import { useEffect, useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../db.js';
-import { salir, usuarioGuardado, type Usuario } from '../sesion.js';
+import { salir, SOLO_DEMO, usuarioGuardado, type Usuario } from '../sesion.js';
 import { sincronizar, type ResultadoSync } from '../sync.js';
 
 export function Estado({ alSalir }: { alSalir: () => void }) {
@@ -86,10 +86,14 @@ export function Estado({ alSalir }: { alSalir: () => void }) {
         <p className="nota">
           Cada medición queda registrada con tu nombre y la fecha y hora en que la cargaste.
         </p>
-        <div style={{ height: 10 }} />
-        <button className="boton suave" onClick={cerrarSesion}>
-          Cerrar sesión
-        </button>
+        {!SOLO_DEMO && (
+          <>
+            <div style={{ height: 10 }} />
+            <button className="boton suave" onClick={cerrarSesion}>
+              Cerrar sesión
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

@@ -30,6 +30,22 @@ Un cartel avisa siempre que es una demostración y que los datos no se guardan e
 En el celular, la banda superior dice lo mismo y la sincronización queda desactivada: no hay
 forma de que una demostración ensucie datos reales.
 
+### La demostración en una sola página
+
+Para mostrarla sin instalar nada, hay una versión empaquetada en **un solo archivo HTML**
+que se abre en cualquier navegador (computadora o celular) y no necesita servidor, cuenta ni
+conexión:
+
+```bash
+node scripts/armar-demo.mjs
+# → docs/demo-tablero.html   (el tablero del técnico y del dueño)
+# → docs/demo-medidor.html   (la app de campo)
+```
+
+Esos dos archivos se pueden mandar por mail o WhatsApp, o subir a cualquier lado. El script
+falla a propósito si el programa quedara partido en varios archivos, porque entonces la
+página suelta no funcionaría.
+
 ### Cómo publicarla gratis
 
 Los dos programas son archivos estáticos: se suben a cualquier servicio de páginas y quedan
